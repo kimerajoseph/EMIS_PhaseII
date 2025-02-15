@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EMIS Home</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>WELCOME TO EMIS</h1>
+        <form id="signInForm">
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Email" required>
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control" placeholder="Password" required>
+            </div>
+            <button type="submit" class="btn btn-success btn-block">Sign In</button>
+            <p>Not yet registred </p> <button type="submit" class="btn btn-success btn-block">Sign Up</button>
+        </form>
+        <!-- <p>or</p> -->
+        <form id="signUpForm">
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Full names" required>
+            </div>
+            <div class="form-group">
+                <input type="email" class="form-control" placeholder="Email" required>
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Substation" required>
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control" placeholder="Password" required>
+            </div>
+            <button type="submit" class="btn btn-success btn-block">Sign Up</button>
+        </form>
+    </div>
+    <script src="js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+<script>
+    document.getElementById('signInForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        alert('Sign In');
+    });
+    document.getElementById('signUpForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        alert('Sign Up');
+    });
+</script>

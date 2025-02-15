@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In / Sign Up</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- <script defer src="js/script.js"></script> -->
+</head>
+<body class="bg-light">
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <!-- Sign In Form -->
+                <div id="signin-form" class="card p-4 shadow">
+                    <h2 class="text-center">WELCOME TO EMIS</h2>
+                    <form method="POST" action="/login">
+                        <div class="mb-3">
+                            <label for="signin-email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="signin-email" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="signin-password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="signin-password" name="password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Sign In</button>
+                    </form>
+                    <p class="text-center mt-3">
+                        Don't have an account? <a href="#" id="show-signup">Sign Up</a>
+                    </p>
+                </div>
+
+                <!-- Sign Up Form (Hidden Initially) -->
+                <div id="signup-form" class="card p-4 shadow mt-3 d-none">
+                    <h2 class="text-center">Sign Up</h2>
+                    <form method="POST" action="/register">
+                        <div class="mb-3">
+                            <label for="signup-name" class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="signup-name" name="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="signup-email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="signup-email" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="signup-password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="signup-password" name="password" required>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">Sign Up</button>
+                    </form>
+                    <p class="text-center mt-3">
+                        Already have an account? <a href="#" id="show-signin">Sign In</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <script src="js/jquery-3.5.1.slim.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+</body>
+</html>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    const signInForm = document.getElementById("signin-form");
+    const signUpForm = document.getElementById("signup-form");
+    const showSignUp = document.getElementById("show-signup");
+    const showSignIn = document.getElementById("show-signin");
+
+    showSignUp.addEventListener("click", function (event) {
+        event.preventDefault();
+        signInForm.classList.add("d-none");
+        signUpForm.classList.remove("d-none");
+    });
+
+    showSignIn.addEventListener("click", function (event) {
+        event.preventDefault();
+        signUpForm.classList.add("d-none");
+        signInForm.classList.remove("d-none");
+    });
+});
+
+</script>
