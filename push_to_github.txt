@@ -1,0 +1,22 @@
+COMMITING CODE TO GITHUB
+git init
+git add .
+git commit -m "Initial commit: Flask authentication app"
+git branch -M main
+git push -u origin main
+
+
+DELETE REPO 
+rm -rf .git
+ADD REMOTE REPO
+git remote add origin hhttps://github.com/kimerajoseph/EMIS_PhaseII.git
+
+PULL REMOTE REPO
+git pull origin main --allow-unrelated-histories
+ENTER MESSAGE, THEN
+In vim:
+Press ESC, then type :wq, and press Enter to save and exit.
+
+
+git config --global user.email "you@example.com"
+git config --global user.name "Your Name"

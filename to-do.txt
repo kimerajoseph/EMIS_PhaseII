@@ -1,0 +1,5 @@
+TO DO
+if user selects category energy loss, set the classification to Main
+ensure drop downs have a value, not the selected value
+ensure no drop down is sent with the default selected value
+use JS to change the select element color to warn user to select value

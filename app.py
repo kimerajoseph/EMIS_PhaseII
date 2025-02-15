@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 import os
@@ -42,10 +42,20 @@ def home():
 def error():
     return render_template('index.html')
 
-@app.route('/meters', methods=['POST'])
-def process_form():
-    form_data = request.form.to_dict()  # Get all form inputs as a dictionary
-    return f"Received Data: {form_data}"
+@app.route('/energy_meters', methods=['POST'])
+def energy_meters():
+    #form_data = request.form.to_dict()  # Get all form inputs as a dictionary
+    #return f"Received Data: {form_data}"
+    return render_template('energy_meter.html')
+
+@app.route('/store_energy_meters', methods=['POST'])
+def store_energy_meters():
+    form_data = request.form.to_dict()
+    print(form_data)
+    my_message="Data stored successfully"
+    return render_template('success.html', message=my_message)
+
+
 
 # User Registration
 @app.route('/register', methods=['POST'])
@@ -78,7 +88,8 @@ def login():
         # flash('Login successful!', 'success')
         # return redirect(url_for('dashboard'))
         my_message="logged in successfully"
-        return render_template('success.html', message = my_message)
+        #return render_template('success.html', message = my_message)
+        return render_template('home.html')
     else:
         print("user not found")
         return render_template('errors.html', message="user not found. check email or register first")
