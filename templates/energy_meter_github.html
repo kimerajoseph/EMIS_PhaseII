@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Energy Meter Form</title>
+    
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Energy Meter Form</h2>
+        <form action="/store_energy_meters" method="post">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="serialNo">Serial No</label>
+                    <input type="text" class="form-control" id="serialNo" placeholder="Enter Serial No" name="serial No" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="manufacturer">Manufacturer</label>
+                    <select id="manufacturer" class="form-control" name="manufacturer" required>
+                        <option selected>Choose...</option>
+                        <option value="Elster">Elster</option>
+                        <option value="Secure Meters">Secure Meters</option>
+                        <option value="Landis & Gyr">Landis & Gyr</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="type">Type</label>
+                    <select id="type" class="form-control" name="type" required>
+                        <option selected>Choose...</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="yom">YOM</label>
+                    <input type="number" class="form-control" id="yom" placeholder="Enter Year of Manufacture" name="YOM" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <!-- <div class="form-group col-md-6">
+                    <label for="yom">YOM</label>
+                    <input type="number" class="form-control" id="yom" placeholder="Enter Year of Manufacture" name="YOM" required>
+                </div> -->
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="accuracy">Accuracy</label>
+                    <select id="accuracy" class="form-control" name="accuracy" required>
+                        <option selected>Choose...</option>
+                        <option value="0.2S">0.2S</option>
+                        <option value="0.5S">0.5S</option>
+                        <option value="1.0S">1.0S</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="classification">Category</label>
+                    <select id="classification" class="form-control" name="category" required>
+                        <option selected>Choose...</option>
+                        <option value="Billing">Billing</option>
+                        <option value="Energy Loss">Energy Loss</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="classification">Classification</label>
+                    <select id="classification" class="form-control" name="classification" required>
+                        <option selected>Choose...</option>
+                        <option value="Main">Main</option>
+                        <option value="Check">Check</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="nodeAttached">Node Attached</label>
+                    <select id="nodeAttached" class="form-control" name="nodeAttached" required>
+                        <option selected>Choose...</option>
+                        <option value="Node 1">Node 1</option>
+                        <option value="Node 2">Node 2</option>
+                    </select>
+                </div>
+            </div>
+            <br>
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <script src="js/jquery-3.5.1.slim.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+
+    <script>
+        document.getElementById('manufacturer').addEventListener('change', function() {
+            var typeSelect = document.getElementById('type');
+            typeSelect.innerHTML = ''; // Clear existing options
+
+            var options = {
+                'Elster': ['Select meter type','Elster A1700', 'Elster A1500'],
+                'Secure Meters': ['Select meter type','CEWE Prometer', 'CEWE Prometer 100'],
+                'Landis & Gyr': ['Select meter type','LG E650']
+            };
+
+            var selectedManufacturer = this.value;
+            if (options[selectedManufacturer]) {
+                options[selectedManufacturer].forEach(function(option) {
+                    var opt = document.createElement('option');
+                    opt.value = option;
+                    opt.innerHTML = option;
+                    typeSelect.appendChild(opt);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
+import random
 import os
 from dotenv import load_dotenv
 load_dotenv()
@@ -42,11 +43,30 @@ def home():
 def error():
     return render_template('index.html')
 
+# ajax for populating dropdown
+@app.route('/get_options', methods=['POST'])
+def get_options():
+    print("ajax called")
+    category = request.json.get('category')  # Get category from request
+    print("selected category: ",category)
+    if category == 'Substation':
+        data = ["Lugogo", "Mutundwe", "Kawanda", "Namanve", "Kapeeka"]
+    elif category == 'IPP':
+        data = ['Ziba', 'Kikagati', 'Nkenda', 'Siti', 'Kabulasoke']
+    elif category == 'Standalone':
+        data = ['Kasese', 'Kabale', 'Mbarara', 'Masaka', 'Mbale']
+    return jsonify(data)  # Return as JSON
+
 @app.route('/energy_meters', methods=['POST'])
 def energy_meters():
-    #form_data = request.form.to_dict()  # Get all form inputs as a dictionary
-    #return f"Received Data: {form_data}"
+    # connect to db and fetch existing nodes
+    metering_nodes = ['']
     return render_template('energy_meter.html')
+
+@app.route('/metering_node', methods=['POST'])
+def metering_node():
+    substations = ['Lugogo', 'Mutundwe', 'Kawanda', 'Namanve', 'Kapeeka']
+    return render_template('metering_node.html', substations = substations)
 
 @app.route('/store_energy_meters', methods=['POST'])
 def store_energy_meters():
@@ -55,6 +75,12 @@ def store_energy_meters():
     my_message="Data stored successfully"
     return render_template('success.html', message=my_message)
 
+@app.route('/store_metering_node', methods=['POST'])
+def store_metering_node():
+    form_data = request.form.to_dict()
+    print(form_data)
+    my_message="Data stored successfully"
+    return render_template('success.html', message=my_message)
 
 
 # User Registration
@@ -85,10 +111,7 @@ def login():
 
     if user and bcrypt.check_password_hash(user.password, password):
         session['user_id'] = user.id
-        # flash('Login successful!', 'success')
-        # return redirect(url_for('dashboard'))
-        my_message="logged in successfully"
-        #return render_template('success.html', message = my_message)
+        #my_message="logged in successfully"
         return render_template('home.html')
     else:
         print("user not found")
@@ -110,6 +133,37 @@ def logout():
     # flash('You have been logged out.', 'info')
     # return redirect(url_for('home'))
     return render_template('index.html')
+
+# API to get all substations
+@app.route('/api/get_substations' , methods=['POST'])
+def get_substations():
+    substations = ['Lugogo', 'Mutundwe', 'Kawanda', 'Namanve', 'Kapeeka']
+    return jsonify(substations)
+
+# render metering billing data form
+@app.route('/metering_form', methods=['POST'])
+def metering_form():
+    return render_template('meter_reading_form.html')
+
+
+# metering billing data form validation
+@app.route('/monthly_data_validation', methods=['POST'])
+def metering_billing():
+    # get meter_no, meter_type, cumulative_imports, cumulative_export, month, year from the DB
+    meter_no = request.json.get('meter_no')  # Get category from request
+    #meter_type = random.choice(['LG E650', 'A1700','A1800','CEWE Prometer','CEWE Prometer 100'])
+    meter_type = random.choice(['LG E650', 'A1700'])
+    print(meter_no)
+    return jsonify({meter_no: meter_no,'cumulative_import':1290, 'cumulative_export':1100, 'meter_type':meter_type})  # Return as JSON
+
+# store metering billing data   
+@app.route('/monthly_billing_data_submission', methods=['POST'])
+def monthly_billing_data_submission():
+    form_data = request.form.to_dict()
+    print(form_data)
+    my_message="Data stored successfully"
+    return render_template('success.html', message=my_message)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -1,0 +1,9 @@
+THE FOLLOWING TABLES ARE INCLUDED
+1. users
+2. substations
+3. IPPs
+4. energy_meters
+5. substation_nodes
+6. ipp_nodes
+7. standalone_nodes
+8. primary_equipment
