@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
+import pymysql
 import random
 import os
 from dotenv import load_dotenv
@@ -24,12 +25,35 @@ bcrypt = Bcrypt(app)
 if db:
     print("Connected to database")
 
+# create connection for insertind data
+# connection = pymysql.connect(host=host, user=username, password=password,database=database)
+# cursor = connection.cursor()
+
 # User Model
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
+
+# Define the model (table structure)
+class SubstationNode(db.Model):
+    __tablename__ = 'substation_nodes'
+    
+    # Define columns
+    substation = db.Column(db.String(255), nullable=False, primary_key=True)
+    node_name = db.Column(db.String(255), nullable=False,primary_key=True)
+    location = db.Column(db.String(255), nullable=False)
+    distributor = db.Column(db.String(255), nullable=False)
+    voltage_level = db.Column(db.Integer(10), nullable=False)
+    region = db.Column(db.String(255), nullable=False)
+    category = db.Column(db.String(255), nullable=False)
+    remote_status = db.Column(db.String(255), nullable=False)
+    added_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+    # String representation for easy debugging
+    def __repr__(self):
+        return f"<SubstationNode {self.substation} - {self.node_name}>"
 
 with app.app_context():
     db.create_all()  # Create database tables
@@ -68,6 +92,34 @@ def metering_node():
     substations = ['Lugogo', 'Mutundwe', 'Kawanda', 'Namanve', 'Kapeeka']
     return render_template('metering_node.html', substations = substations)
 
+@app.route('/store_metering_node', methods=['POST'])
+def store_metering_node():
+    form_data = request.form.to_dict()
+
+    if(form_data['category'] != 'Standalone'):
+        del form_data['distributor_2']
+        form_data['distributor'] = form_data['distributor_1']
+        del form_data['distributor_1']
+        print(form_data)
+
+        new_node = SubstationNode(
+        substation=form_data['uetclSubstation'],
+        node_name=form_data['node_name'],
+        location=form_data['location'],
+        distributor=form_data['distributor'],
+        voltage_level= form_data['voltageLevel'],
+        region=form_data['region'],
+        category=form_data['category'],
+        remote_status=form_data['remote']
+    )
+    
+    # Add the object to the session and commit the transaction
+    db.session.add(new_node)
+    db.session.commit()
+    my_message="Data stored successfully"
+    return render_template('success.html', message=my_message)
+
+
 @app.route('/store_energy_meters', methods=['POST'])
 def store_energy_meters():
     form_data = request.form.to_dict()
@@ -75,12 +127,12 @@ def store_energy_meters():
     my_message="Data stored successfully"
     return render_template('success.html', message=my_message)
 
-@app.route('/store_metering_node', methods=['POST'])
-def store_metering_node():
-    form_data = request.form.to_dict()
-    print(form_data)
-    my_message="Data stored successfully"
-    return render_template('success.html', message=my_message)
+# @app.route('/store_metering_node', methods=['POST'])
+# def store_metering_node():
+#     form_data = request.form.to_dict()
+#     print(form_data)
+#     my_message="Data stored successfully"
+#     return render_template('success.html', message=my_message)
 
 
 # User Registration
