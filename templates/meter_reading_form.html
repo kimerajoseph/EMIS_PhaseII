@@ -13,6 +13,29 @@
             <form action="/monthly_billing_data_submission" method="POST">
                 <div class="row g-3">
                     <div class="col-md-4">
+                        <label class="form-label">Select Category</label>
+                        <select class="form-control" id="category" name="category">
+                            <option selected value="default_value">Select Category</option>
+                            <option value="Substation">Substation</option>
+                            <option value="Standalone">Standalone</option>
+                            <option value="IPP">IPP</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="selectNode">Select Node</label>
+                        <select id="nodeName" class="form-control" name="nodeName" required>
+                            <option selected value="default_value">Select Node</option>
+                            <option value="Node1">Node1</option>
+                            <option value="Node2">Node2</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Billing Period</label>
+                        <input type="date" class="form-control" name="billingPeriod">
+                    </div>
+
+
+                    <div class="col-md-4">
                         <label class="form-label">Meter Number</label>
                         <input type="text" class="form-control" name="Meter Number" id="meterNumber">
                     </div>
@@ -141,6 +164,44 @@
     var lastMonthCumulativeImport = 0.0
     var lastMonthCumulativeExport = 0.0
 
+    // loading metering node options
+    function updateSubstationOptions() {
+    const category = document.getElementById('category').value;
+    if (category === 'Substation') {
+        substationGroup.style.display = 'block';
+        distributor2.style.display = 'none';
+         distributor1Label.innerHTML = "Distributor"
+        // uetclSubstation.innerHTML = `
+        //     <option value="default_value" selected>Select Substation</option>
+        //     <option value="Kawanda">Kawanda</option>
+        //     <option value="Mutundwe">Mutundwe</option>
+        //     <option value="Lugogo">Lugogo</option>
+            
+        // `;
+
+        var substation_data = JSON.parse('{{ substations | tojson }}');
+        console.log(substation_data);
+        substation_data.forEach(substation_data => {
+            var opt = document.createElement('option');
+            opt.value = substation_data;
+            opt.innerHTML = substation_data;
+            uetclSubstation.appendChild(opt);
+        });
+    } 
+    else if (category === 'Standalone') {
+        distributor2.style.display = 'block';
+        substationGroup.style.display = 'none';
+         distributor1Label.innerHTML = "Distributor 1"
+    } else {
+        substationGroup.style.display = 'none';
+        distributor2.style.display = 'none';
+        distributor1Label.innerHTML = "Distributor"
+        uetclSubstation.innerHTML = `<option selected value="substation_default_value">Select Substation</option>`;
+    }
+}
+
+
+
     // form validation on submission
     document.querySelector('form').addEventListener('submit', function(event) {
         var rate1 = parseFloat(document.querySelector('input[name="Rate 1"]').value);
@@ -208,6 +269,7 @@ document.getElementById('meterNumber').addEventListener('blur', function() {
     
 const regex = /^\d+$/;
 document.querySelector('form').addEventListener('input', function(event) {
+//document.querySelectorAll('input[type="number"]'), function(event) {
     const inputValue = event.target.value;
     console.log(inputValue)
   
@@ -217,5 +279,8 @@ document.querySelector('form').addEventListener('input', function(event) {
         event.target.value = inputValue.toString().replace(/[+-]/g, '');
     } 
   });    
+
+
+  
  
 </script>

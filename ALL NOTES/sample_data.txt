@@ -1,0 +1,10 @@
+IPP NODE DATA FROM FORM
+
+{'category': 'IPP', 'ippName': 'Sindila', 'location': 'Kampala', 'node_name': 'TX 1', 
+'distributor_1': 'UEDCL', 'distributor_2': 'NA', 'region': 'Central', 'type': 'Billing',
+ 'voltageLevel': '400', 'remote': 'Yes'}
+
+STANDALONE DATA NODE 
+ {'category': 'Standalone', 'uetclSubstation': 'substation_default_value', 'location': 'Kampala',
+  'node_name': 'TX 1', 'distributor_1': 'UEDCL', 'distributor_2': 'WENRECO', 
+  'region': 'Eastern', 'type': 'Billing', 'voltageLevel': '220', 'remote': 'Yes'}

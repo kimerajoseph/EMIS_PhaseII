@@ -23,7 +23,7 @@
                     </select>
                 </div>
                 <div class="form-group col-md-6" id="substation-group">
-                    <label for="uetclSubstation">Substation</label>
+                    <label for="uetclSubstation" id="uetclSubstationLabel">Substation</label>
                     <select class="form-control" id="uetclSubstation" name="uetclSubstation">
                         <!-- <option selected value="default_value">Select Substation</option> -->
                     </select>
@@ -137,14 +137,20 @@
 </body>
 </html>
 
-<!-- <style>
-    input, select, textarea {
-    border: 5px solid black; /* Default black border */
-} -->
-
-</style>
+<style>
+    input.form-control, select.form-control {
+        border: 1px solid rgb(18, 18, 18);
+    }
+    </style>
 
 <script>
+
+if (window.history.replaceState) {
+    window.history.replaceState(null, null, window.location.href);
+}
+    // var substation_data = ['Lugogo','Kla_Nrth']
+    // var ipp_data = ['Sindila','Mahoma']
+    var labelToAlter = document.getElementById('uetclSubstationLabel');
     function updateSubstationOptions() {
     const category = document.getElementById('category').value;
     const substationGroup = document.getElementById('substation-group');
@@ -155,18 +161,14 @@
     //distributor2.style.display = 'none';
 
     if (category === 'Substation') {
+        labelToAlter.innerHTML = "Substation"
         substationGroup.style.display = 'block';
+        uetclSubstation.innerHTML = ""
+        uetclSubstation.innerHTML = `<option selected value="default_value">Select Substation</option>`
         distributor2.style.display = 'none';
-         distributor1Label.innerHTML = "Distributor"
-        // uetclSubstation.innerHTML = `
-        //     <option value="default_value" selected>Select Substation</option>
-        //     <option value="Kawanda">Kawanda</option>
-        //     <option value="Mutundwe">Mutundwe</option>
-        //     <option value="Lugogo">Lugogo</option>
-            
-        // `;
-
-        var substation_data = JSON.parse('{{ substations | tojson }}');
+        distributor1Label.innerHTML = "Distributor"
+        substation_data = JSON.parse('{{ substations | tojson }}');
+        
         console.log(substation_data);
         substation_data.forEach(substation_data => {
             var opt = document.createElement('option');
@@ -175,11 +177,32 @@
             uetclSubstation.appendChild(opt);
         });
     } 
+    
+    else if (category === 'IPP') {
+        labelToAlter.innerHTML = "IPP name"
+        substationGroup.style.display = 'block';
+        distributor2.style.display = 'none';
+        uetclSubstation.innerHTML = ""
+        uetclSubstation.name = "ippName"
+        uetclSubstation.innerHTML = `<option selected value="default_value">Select IPP</option>`
+        distributor1Label.innerHTML = "Distributor"
+       ipp_data = JSON.parse('{{ ipps | tojson }}');        
+        console.log(ipp_data);
+        ipp_data.forEach(ipp_data => {
+            var opt = document.createElement('option');
+            opt.value = ipp_data;
+            opt.innerHTML = ipp_data;
+            uetclSubstation.appendChild(opt);
+        });
+    } 
+  
+    
     else if (category === 'Standalone') {
         distributor2.style.display = 'block';
         substationGroup.style.display = 'none';
          distributor1Label.innerHTML = "Distributor 1"
-    } else {
+    } 
+    else {
         substationGroup.style.display = 'none';
         distributor2.style.display = 'none';
         distributor1Label.innerHTML = "Distributor"

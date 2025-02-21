@@ -7,113 +7,175 @@
     
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
-   
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script> -->
 </head>
 <body>
     <div class="container mt-5">
         <h2>Energy Meter Form</h2>
+        <br>
         <form id="energyMeterForm" action="/store_energy_meters" method="post">
+            <!-- New Section: Meter Category, Node, and Node Meter Classification -->
             <div class="form-row">
-            <div class="form-group col-md-6">
-                <label for="serialNo">Serial No</label>
-                <input type="text" class="form-control" id="serialNo" placeholder="Enter Serial No" name="serial No" required>
-            </div>
-            <div class="form-group col-md-6">
-                <label for="manufacturer">Manufacturer</label>
-                <select id="manufacturer" class="form-control" name="manufacturer" required>
-                <option selected value="default_value">Select Manufacturer</option>
-                <option value="Elster">Elster</option>
-                <option value="Secure Meters">Secure Meters</option>
-                <option value="Landis & Gyr">Landis & Gyr</option>
-                </select>
-            </div>
-            </div>
-            <div class="form-row">
-            <div class="form-group col-md-6">
-                <label for="type">Type</label>
-                <select id="type" class="form-control" name="type" required>
-                <option selected value="default_value">Select Meter Type</option>
-                </select>
-            </div>
-            <div class="form-group col-md-6">
-                <label for="yom">YOM</label>
-                <input type="number" class="form-control" id="yom" placeholder="Enter Year of Manufacture" name="YOM" required>
-            </div>
-            </div>
-            <div class="form-row">
-            <div class="form-group col-md-6">
-                <label for="accuracy">Accuracy</label>
-                <select id="accuracy" class="form-control" name="accuracy" required>
-                <option selected value="default_value">Select Accuracy</option>
-                <option value="0.2S">0.2S</option>
-                <option value="0.5S">0.5S</option>
-                <option value="1.0S">1.0S</option>
-                </select>
-            </div>
-            <div class="form-group col-md-6">
-                <label for="classification">Category</label>
-                <select id="classification" class="form-control" name="category" required>
-                <option selected value="default_value">Select Category</option>
-                <option value="Billing">Billing</option>
-                <option value="Energy Loss">Energy Loss</option>
-                </select>
-            </div>
-            </div>
-            <div class="form-row">
-            <div class="form-group col-md-6">
-                <label for="classification">Classification</label>
-                <select id="classification" class="form-control" name="classification" required>
-                <option selected value="default_value">Select Classification</option>
-                <option value="Main">Main</option>
-                <option value="Check">Check</option>
-                </select>
-            </div>
-            <div class="form-group col-md-6">
-                <label for="elements">Number of Elements</label>
-                <select id="elements" class="form-control" name="elements" required>
-                <option selected value="default_value">Select No of Elements</option>
-                <option value="2 Elements">2 Elements</option>
-                <option value="3 Elements">3 Elements</option>
-                </select>
-            </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label for="category">Category</label>
-                    <select class="form-control" id="category" name="category" onchange="updateSubstationOptions()">
-                        <option selected value="default_value">Select Category</option>
+                <div class="form-group col-md-4">
+                    <label for="meterCategory" id="meterCategoryLabel">Meter Category</label>
+                    <select id="meterCategory" class="form-control" name="meter_category" onchange="updateSubstationOptions()">
+                        <option selected value="default_value">Select Meter Category</option>
                         <option value="Substation">Substation</option>
                         <option value="Standalone">Standalone</option>
                         <option value="IPP">IPP</option>
                     </select>
                 </div>
-                <div class="form-group col-md-6">
-                    <label for="nodeName">Name of Node</label>
+                <div class="form-group col-md-4">
+                    <label for="selectNode">Select Node</label>
                     <select id="nodeName" class="form-control" name="nodeName" required>
-                    <!-- <option selected value="default_value">Select Node</option> -->
+                        <option selected value="default_value">Select Node</option>
+                        <!-- <option value="Node1">Node1</option>
+                        <option value="Node2">Node2</option> -->
                     </select>
                 </div>
+                <div class="form-group col-md-4">
+                    <label for="nodeClassification">Node Meter Classification</label>
+                    <select id="nodeClassification" class="form-control" name="node_classification" required>
+                        <option selected value="default_value">Select Classification</option>
+                        <option value="Main Meter">Main Meter</option>
+                        <option value="Check Meter">Check Meter</option>
+                    </select>
                 </div>
+            </div>
+        
+            <!-- Serial No, Manufacturer, and Type -->
             <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label for="classification">CT Ratio</label>
+                <div class="form-group col-md-4">
+                    <label for="serialNo">Serial No</label>
+                    <input type="text" class="form-control" id="serialNo" placeholder="Enter Serial No" name="serial_no" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="manufacturer">Manufacturer</label>
+                    <select id="manufacturer" class="form-control" name="manufacturer" required>
+                        <option selected value="default_value">Select Manufacturer</option>
+                        <option value="Elster">Elster</option>
+                        <option value="Secure Meters">Secure Meters</option>
+                        <option value="Landis & Gyr">Landis & Gyr</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="type">Type</label>
+                    <select id="type" class="form-control" name="type" required>
+                        <option selected value="default_value">Select Meter Type</option>
+                        <option value="Single Phase">Single Phase</option>
+                        <option value="Three Phase">Three Phase</option>
+                    </select>
+                </div>
+            </div>
+        
+            <!-- YOM, Accuracy, and Category -->
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="yom">Year of Manufacture (YOM)</label>
+                    <input type="number" class="form-control" id="yom" placeholder="Enter Year" name="YOM" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="accuracy">Accuracy</label>
+                    <select id="accuracy" class="form-control" name="accuracy" required>
+                        <option selected value="default_value">Select Accuracy</option>
+                        <option value="0.2S">0.2S</option>
+                        <option value="0.5S">0.5S</option>
+                        <option value="1.0S">1.0S</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="energyCategory">Energy Meter Category</label>
+                    <select id="energyCategory" class="form-control" name="energy_category" required>
+                        <option selected value="default_value">Select Category</option>
+                        <option value="Billing">Billing</option>
+                        <option value="Energy Loss">Energy Loss</option>
+                    </select>
+                </div>
+            </div>
+        
+            <!-- Classification, Elements, and CT Ratio -->
+            <div class="form-row">
+                <!-- <div class="form-group col-md-4">
+                    <label for="meterClassification">Classification</label>
+                    <select id="meterClassification" class="form-control" name="classification" required>
+                        <option selected value="default_value">Select Classification</option>
+                        <option value="Main">Main</option>
+                        <option value="Check">Check</option>
+                    </select>
+                </div> -->
+                <div class="form-group col-md-4">
+                    <label for="elements">Number of Elements</label>
+                    <select id="elements" class="form-control" name="elements" required>
+                        <option selected value="default_value">Select No of Elements</option>
+                        <option value="2 Elements">2 Elements</option>
+                        <option value="3 Elements">3 Elements</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="CTRatio">CT Ratio</label>
                     <input type="text" class="form-control" id="CTRatio" placeholder="Enter CT ratio" name="CT_ratio" required>
                 </div>
-                <div class="form-group col-md-6">
-                    <label for="nodeAttached">VT Ratio</label>
+                <div class="form-group col-md-4">
+                    <label for="VTRatio">VT Ratio</label>
                     <input type="text" class="form-control" id="VTRatio" placeholder="Enter VT ratio" name="VT_ratio" required>
                 </div>
-                </div>
+            </div>
+        
+            <!-- VT Ratio, Node Category, and Node Name -->
+            <div class="form-row">
+               
+                <!-- <div class="form-group col-md-4">
+                    <label for="category">Node Category</label>
+                    <select class="form-control" id="category" name="node_category" onchange="updateSubstationOptions()">
+                        <option selected value="default_value">Select Category</option>
+                        <option value="Substation">Substation</option>
+                        <option value="Standalone">Standalone</option>
+                        <option value="IPP">IPP</option>
+                    </select>
+                </div> -->
+                <!-- <div class="form-group col-md-4">
+                    <label for="nodeName">Name of Node</label>
+                    <select id="nodeName" class="form-control" name="node_name" required>
+                        <option selected value="default_value">Select Node</option>
+                    </select>
+                </div> -->
+            </div>
+        
+            <!-- Submit Button -->
             <br>
             <div class="form-row">
-            <div class="form-group col-md-12">
-                <button type="submit" class="btn btn-primary btn-block">Submit</button>
-            </div>
+                <div class="form-group col-md-12">
+                    <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                </div>
             </div>
         </form>
+<!--         
+        <script>
+        function updateSubstationOptions() {
+            var category = document.getElementById("category").value;
+            var nodeName = document.getElementById("nodeName");
+        
+            // Clear existing options
+            nodeName.innerHTML = '<option selected value="default_value">Select Node</option>';
+        
+            // Fetch relevant nodes from the server based on the selected category
+            fetch('/get_nodes?category=' + category)
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(node => {
+                        var option = document.createElement("option");
+                        option.value = node;
+                        option.textContent = node;
+                        nodeName.appendChild(option);
+                    });
+                })
+                .catch(error => console.error("Error fetching nodes:", error));
+        }
+        </script>
+         -->
     </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -125,10 +187,17 @@
 
 </body>
 </html>
+<style>
+input.form-control, select.form-control {
+    border: 1px solid rgb(18, 18, 18);
+}
+</style>
 
 <script>
     function updateSubstationOptions() {
-    var selectedCategory = document.getElementById('category').value;
+        console.log("function called")
+    var selectedCategory = document.getElementById('meterCategory').value;
+    console.log(selectedCategory)
     var availableNodes = document.getElementById('nodeName');
     $.ajax({
         url: '/get_options',  // Flask endpoint

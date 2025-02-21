@@ -4,22 +4,30 @@ from flask_bcrypt import Bcrypt
 import pymysql
 import random
 import os
+#from python_scripts import app_variables
 from dotenv import load_dotenv
 load_dotenv()
 
-username=os.getenv("USER")
-password = os.getenv('PASSWORD')
-host=os.getenv("SERVER")
-database = os.getenv('DB_NAME')
-port=os.getenv("PORT")
+# IMPORT EXTERNAL SCRIPTS AND CONFIGS
+from config import Config
+from database import db
+from models import User, SubstationNode, IPPNode, StandaloneNode
+import store_nodes
+
+# username=os.getenv("USER")
+# password = os.getenv('PASSWORD')
+# host=os.getenv("SERVER")
+# database = os.getenv('DB_NAME')
+# port=os.getenv("PORT")
 
 app = Flask(__name__)
-#INITIALIASE AND CONNECT TO DB
-app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://{username}:{password}@{host}:{port}/{database}'
-#app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = os.urandom(12).hex()
-
-db = SQLAlchemy(app)
+app.config.from_object(Config)
+# #INITIALIASE AND CONNECT TO DB
+# app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://{username}:{password}@{host}:{port}/{database}'
+# #app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# app.config['SECRET_KEY'] = os.urandom(12).hex()
+db.init_app(app)
+# db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 
 if db:
@@ -29,31 +37,7 @@ if db:
 # connection = pymysql.connect(host=host, user=username, password=password,database=database)
 # cursor = connection.cursor()
 
-# User Model
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(100), unique=True, nullable=False)
-    password = db.Column(db.String(255), nullable=False)
-
-# Define the model (table structure)
-class SubstationNode(db.Model):
-    __tablename__ = 'substation_nodes'
-    
-    # Define columns
-    substation = db.Column(db.String(255), nullable=False, primary_key=True)
-    node_name = db.Column(db.String(255), nullable=False,primary_key=True)
-    location = db.Column(db.String(255), nullable=False)
-    distributor = db.Column(db.String(255), nullable=False)
-    voltage_level = db.Column(db.Integer(10), nullable=False)
-    region = db.Column(db.String(255), nullable=False)
-    category = db.Column(db.String(255), nullable=False)
-    remote_status = db.Column(db.String(255), nullable=False)
-    added_at = db.Column(db.DateTime, default=db.func.current_timestamp())
-
-    # String representation for easy debugging
-    def __repr__(self):
-        return f"<SubstationNode {self.substation} - {self.node_name}>"
+# MODELS HERE
 
 with app.app_context():
     db.create_all()  # Create database tables
@@ -90,33 +74,21 @@ def energy_meters():
 @app.route('/metering_node', methods=['POST'])
 def metering_node():
     substations = ['Lugogo', 'Mutundwe', 'Kawanda', 'Namanve', 'Kapeeka']
-    return render_template('metering_node.html', substations = substations)
+    ipps = ['Sindila','Mahoma','Bugoye','KCCL']
+    return render_template('metering_node.html', substations = substations, ipps=ipps)
 
 @app.route('/store_metering_node', methods=['POST'])
 def store_metering_node():
     form_data = request.form.to_dict()
+    print(form_data)
 
     if(form_data['category'] != 'Standalone'):
         del form_data['distributor_2']
         form_data['distributor'] = form_data['distributor_1']
         del form_data['distributor_1']
-        print(form_data)
-
-        new_node = SubstationNode(
-        substation=form_data['uetclSubstation'],
-        node_name=form_data['node_name'],
-        location=form_data['location'],
-        distributor=form_data['distributor'],
-        voltage_level= form_data['voltageLevel'],
-        region=form_data['region'],
-        category=form_data['category'],
-        remote_status=form_data['remote']
-    )
+        #print(form_data)
     
-    # Add the object to the session and commit the transaction
-    db.session.add(new_node)
-    db.session.commit()
-    my_message="Data stored successfully"
+    my_message = store_nodes.store_node_data(form_data,db)
     return render_template('success.html', message=my_message)
 
 
