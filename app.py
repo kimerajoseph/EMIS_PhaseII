@@ -12,7 +12,7 @@ load_dotenv()
 from config import Config
 from database import db
 from models import User, SubstationNode, IPPNode, StandaloneNode
-import store_nodes
+import store_data_to_db
 
 # username=os.getenv("USER")
 # password = os.getenv('PASSWORD')
@@ -49,7 +49,7 @@ def home():
 
 @app.route('/error', methods=['POST'])
 def error():
-    return render_template('index.html')
+    return render_template('home.html')
 
 # ajax for populating dropdown
 @app.route('/get_options', methods=['POST'])
@@ -88,16 +88,26 @@ def store_metering_node():
         del form_data['distributor_1']
         #print(form_data)
     
-    my_message = store_nodes.store_node_data(form_data,db)
+    my_message = store_data_to_db.store_node_data(form_data,db)
     return render_template('success.html', message=my_message)
 
-
+# STORE ENERGY METER DATA
 @app.route('/store_energy_meters', methods=['POST'])
 def store_energy_meters():
     form_data = request.form.to_dict()
     print(form_data)
-    my_message="Data stored successfully"
+    #my_message="Data stored successfully"
+    my_message = store_data_to_db.store_energy_meter_data(form_data,db)
     return render_template('success.html', message=my_message)
+
+# store metering billing data   
+@app.route('/monthly_billing_data_submission', methods=['POST'])
+def monthly_billing_data_submission():
+    form_data = request.form.to_dict()
+    print(form_data)
+    my_message=store_data_to_db.store_monthly_billing_data(form_data,db)
+    return render_template('success.html', message=my_message)
+
 
 # @app.route('/store_metering_node', methods=['POST'])
 # def store_metering_node():
@@ -179,14 +189,6 @@ def metering_billing():
     meter_type = random.choice(['LG E650', 'A1700'])
     print(meter_no)
     return jsonify({meter_no: meter_no,'cumulative_import':1290, 'cumulative_export':1100, 'meter_type':meter_type})  # Return as JSON
-
-# store metering billing data   
-@app.route('/monthly_billing_data_submission', methods=['POST'])
-def monthly_billing_data_submission():
-    form_data = request.form.to_dict()
-    print(form_data)
-    my_message="Data stored successfully"
-    return render_template('success.html', message=my_message)
 
 
 if __name__ == '__main__':

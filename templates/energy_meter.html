@@ -19,7 +19,7 @@
             <div class="form-row">
                 <div class="form-group col-md-4">
                     <label for="meterCategory" id="meterCategoryLabel">Meter Category</label>
-                    <select id="meterCategory" class="form-control" name="meter_category" onchange="updateSubstationOptions()">
+                    <select id="meterCategory" class="form-control" name="meter_category" onchange="updateOptions()" required>
                         <option selected value="default_value">Select Meter Category</option>
                         <option value="Substation">Substation</option>
                         <option value="Standalone">Standalone</option>
@@ -36,7 +36,7 @@
                 </div>
                 <div class="form-group col-md-4">
                     <label for="nodeClassification">Node Meter Classification</label>
-                    <select id="nodeClassification" class="form-control" name="node_classification" required>
+                    <select id="meter_classification" class="form-control" name="meter_classification" required>
                         <option selected value="default_value">Select Classification</option>
                         <option value="Main Meter">Main Meter</option>
                         <option value="Check Meter">Check Meter</option>
@@ -61,10 +61,8 @@
                 </div>
                 <div class="form-group col-md-4">
                     <label for="type">Type</label>
-                    <select id="type" class="form-control" name="type" required>
+                    <select id="meter_type" class="form-control" name="meter_type" required>
                         <option selected value="default_value">Select Meter Type</option>
-                        <option value="Single Phase">Single Phase</option>
-                        <option value="Three Phase">Three Phase</option>
                     </select>
                 </div>
             </div>
@@ -86,7 +84,7 @@
                 </div>
                 <div class="form-group col-md-4">
                     <label for="energyCategory">Energy Meter Category</label>
-                    <select id="energyCategory" class="form-control" name="energy_category" required>
+                    <select id="meter_usage" class="form-control" name="meter_usage" required>
                         <option selected value="default_value">Select Category</option>
                         <option value="Billing">Billing</option>
                         <option value="Energy Loss">Energy Loss</option>
@@ -106,7 +104,7 @@
                 </div> -->
                 <div class="form-group col-md-4">
                     <label for="elements">Number of Elements</label>
-                    <select id="elements" class="form-control" name="elements" required>
+                    <select id="elements" class="form-control" name="no_of_elements" required>
                         <option selected value="default_value">Select No of Elements</option>
                         <option value="2 Elements">2 Elements</option>
                         <option value="3 Elements">3 Elements</option>
@@ -194,7 +192,7 @@ input.form-control, select.form-control {
 </style>
 
 <script>
-    function updateSubstationOptions() {
+    function updateOptions() {
         console.log("function called")
     var selectedCategory = document.getElementById('meterCategory').value;
     console.log(selectedCategory)
@@ -223,6 +221,29 @@ input.form-control, select.form-control {
         });
     }
 
+    // populate the meter type drop down
+    document.getElementById("manufacturer").addEventListener("change", function() {
+    const meterTypeSelect = document.getElementById("meter_type");
+    meterTypeSelect.innerHTML = ""; // Clear existing options
+    meterTypeSelect.innerHTML = `<option selected value="default_value">Select Meter Type</option>`;
+
+    const meterOptions = {
+        "Elster": ["Elster A1700", "Elster A1500", "Elster A1800"],
+        "Landis & Gyr": ["LGE650"],
+        "Secure Meters": ["CEWE Prometer 100", "CEWE Prometer"]
+    };
+    
+    const selectedManufacturer = this.value;
+    
+    if (meterOptions[selectedManufacturer]) {
+        meterOptions[selectedManufacturer].forEach(meter => {
+            let option = document.createElement("option");
+            option.value = meter;
+            option.textContent = meter;
+            meterTypeSelect.appendChild(option);
+        });
+    }
+});
 
 
 </script>

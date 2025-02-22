@@ -8,3 +8,20 @@ STANDALONE DATA NODE
  {'category': 'Standalone', 'uetclSubstation': 'substation_default_value', 'location': 'Kampala',
   'node_name': 'TX 1', 'distributor_1': 'UEDCL', 'distributor_2': 'WENRECO', 
   'region': 'Eastern', 'type': 'Billing', 'voltageLevel': '220', 'remote': 'Yes'}
+
+  ENERGY METER DATA
+  {'meter_category': 'Substation', 'nodeName': 'Mutundwe', 'meter_classification': 'Main Meter',
+   'serial_no': 'WP0934', 'manufacturer': 'Secure Meters', 'meter_type': 'CEWE Prometer 100', 
+   'YOM': '2019', 'accuracy': '0.5S', 'meter_usage': 'Energy Loss', 'elements': '2 Elements', 
+   'CT_ratio': '100:1', 'VT_ratio': '300'}
+
+   METER READING FORM
+   {'meterCategory': 'Substation', 'nodeName': 'Mutundwe', 'billingPeriod': '2025-02-22',
+    'Meter Number': 'wp0', 'DateTimeOfReading': '2025-02-22T11:17', 'CumulativeImport': '890',
+     'CumulativeExport': '08900', 'Rate1': '0909', 'Rate2': '09090', 'Rate3': '090',
+     'Rate4': '0909', 'Rate5': '0909', 'Rate6': '0909', 'MaxDem1': '090', 
+     'MaxDem1DateTime': '2025-02-22T11:17', 'MaxDem2': '09090', 'MaxDem2DateTime': '2025-02-06T11:21', 
+     'MaxDem3': '090', 'MaxDem3DateTime': '2025-02-13T11:17', 'Reactive Import': '090', 
+     'Reactive Export': '0909', 'Apparent Import': '090', 'Number of Resets': '090', 
+     'Date of Last Reset': '2025-02-17T11:17', 'Programming Count': '090', 
+     'CT Ratio': '09', 'VT Ratio': '090'}

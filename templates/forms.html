@@ -14,7 +14,7 @@
                 <div class="row g-3">
                     <div class="col-md-4">
             <label class="form-label">Select Category</label>
-            <select class="form-control" id="meterCategory" name="meterCategory" onchange="updateOptions()">
+            <select class="form-control" id="meterCategory" name="meterCategory" onchange="updateSubstationOptions()">
                 <option selected value="default_value">Select Category</option>
                 <option value="Substation">Substation</option>
                 <option value="Standalone">Standalone</option>
@@ -37,87 +37,87 @@
 
                     <div class="col-md-4">
                         <label class="form-label">Meter Number</label>
-                        <input type="text" class="form-control" name="serialNo" id="meterNumber">
+                        <input type="text" class="form-control" name="Meter Number" id="meterNumber">
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Date & Time of Reading</label>
-                        <input type="datetime-local" class="form-control" name="DateTimeOfReading">
+                        <input type="datetime-local" class="form-control" name="Date & Time of Reading">
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Cumulative Import</label>
-                        <input type="number" step="any" class="form-control" name="CumulativeImport" required onkeyup="formatNumber(this)">
+                        <input type="number" step="any" class="form-control" name="Cumulative Import" required>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Cumulative Export</label>
-                        <input type="number" step="any" class="form-control" name="CumulativeExport" required onkeyup="formatNumber(this)">
+                        <input type="number" step="any" class="form-control" name="Cumulative Export" required>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Rate 1</label>
-                        <input type="number" step="any" class="form-control" name="Rate1" required onkeyup="formatNumber(this)">
+                        <input type="number" step="any" class="form-control" name="Rate 1" required>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Rate 2</label>
-                        <input type="number" step="any" class="form-control" name="Rate2" required onkeyup="formatNumber(this)">
+                        <input type="number" step="any" class="form-control" name="Rate 2" required>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Rate 3</label>
-                        <input type="number" step="any" class="form-control" name="Rate3" required onkeyup="formatNumber(this)">
+                        <input type="number" step="any" class="form-control" name="Rate 3" required>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Rate 4</label>
-                        <input type="number" step="any" class="form-control" name="Rate4" onkeyup="formatNumber(this)">
+                        <input type="number" step="any" class="form-control" name="Rate 4">
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Rate 5</label>
-                        <input type="number" step="any" class="form-control" name="Rate5" onkeyup="formatNumber(this)">
+                        <input type="number" step="any" class="form-control" name="Rate 5">
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Rate 6</label>
-                        <input type="number" step="any" class="form-control" name="Rate6" onkeyup="formatNumber(this)">
+                        <input type="number" step="any" class="form-control" name="Rate 6">
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Max Dem 1</label>
-                        <input type="number" step="any" class="form-control" name="MaxDem1" onkeyup="formatNumber(this)">
+                        <input type="number" step="any" class="form-control" name="Max Dem 1">
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Max Dem 1 Time</label>
-                        <input type="datetime-local" class="form-control" name="MaxDem1DateTime">
+                        <input type="datetime-local" class="form-control" name="Max Dem 1 time">
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Max Dem 2</label>
-                        <input type="number" class="form-control" name="MaxDem2" onkeyup="formatNumber(this)">
+                        <input type="number" class="form-control" name="Max Dem 2">
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Max Dem 2 Time</label>
-                        <input type="datetime-local" class="form-control" name="MaxDem2DateTime">
+                        <input type="datetime-local" class="form-control" name="Max Dem 2 time">
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Max Dem 3</label>
-                        <input type="number" class="form-control" name="MaxDem3" onkeyup="formatNumber(this)">
+                        <input type="number" class="form-control" name="Max Dem 3">
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Max Dem 3 Time</label>
-                        <input type="datetime-local" class="form-control" name="MaxDem3DateTime">
+                        <input type="datetime-local" class="form-control" name="Max Dem 3 time">
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Reactive Import</label>
-                        <input type="number" step="any" class="form-control" name="ReactiveImport" onkeyup="formatNumber(this)">
+                        <input type="number" step="any" class="form-control" name="Reactive Import">
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Reactive Export</label>
-                        <input type="number" step="any" class="form-control" name="ReactiveExport" onkeyup="formatNumber(this)">
+                        <input type="number" step="any" class="form-control" name="Reactive Export">
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Apparent Import</label>
-                        <input type="number" step="any" class="form-control" name="ApparentImport" onkeyup="formatNumber(this)">
+                        <input type="number" step="any" class="form-control" name="Apparent Import">
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Number of Resets</label>
-                        <input type="number" class="form-control" name="NumberOfResets" onkeyup="formatNumber(this)">
+                        <input type="number" class="form-control" name="Number of Resets">
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Date of Last Reset</label>
-                        <input type="datetime-local" class="form-control" name="DateOfLastReset">
+                        <input type="datetime-local" class="form-control" name="Date of Last Reset">
                     </div>
                     <!-- <div class="col-md-4">
                         <label class="form-label">Date and Time Submission</label>
@@ -125,15 +125,15 @@
                     </div> -->
                     <div class="col-md-4">
                         <label class="form-label">Programming Count</label>
-                        <input type="number" class="form-control" name="ProgrammingCount" onkeyup="formatNumber(this)">
+                        <input type="number" class="form-control" name="Programming Count">
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">CT Ratio</label>
-                        <input type="number" class="form-control" name="CTRatio" step="1" onkeyup="formatNumber(this)">
+                        <input type="number" class="form-control" name="CT Ratio">
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">VT Ratio</label>
-                        <input type="number" class="form-control" name="VTRatio" step="1" onkeyup="formatNumber(this)">
+                        <input type="number" class="form-control" name="VT Ratio">
                     </div>
                 </div>
                 <br>
@@ -165,47 +165,47 @@
     var lastMonthCumulativeExport = 0.0
 
     // loading metering node options
-    function updateOptions() {
-    console.log("function called")
-    var selectedCategory = document.getElementById('meterCategory').value;
-    console.log(selectedCategory)
-    var availableNodes = document.getElementById('nodeName');
-    $.ajax({
-        url: '/get_options',  // Flask endpoint
-        type: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify({ category: selectedCategory }),  // Send category data
-        dataType: 'json',
-            success: function (data) {
-                console.log("function data",data);
-                availableNodes.innerHTML = "";
-                //availableNodes.append('<option value="default_value" selected>--Select an Option--</option>'); // Default placeholder
-                availableNodes.innerHTML = `<option value="default_value" selected>Select an option</option>`   
-                data.forEach(data => {
-                    var opt = document.createElement('option');
-                    opt.value = data;
-                    opt.innerHTML = data;
-                    availableNodes.appendChild(opt);
-                });
-            },
-            error: function () {
-                alert('Failed to fetch options');
-            }
-        });
-    }
+//     function updateSubstationOptions() {
+//     const category = document.getElementById('category').value;
+//     if (category === 'Substation') {
+//         substationGroup.style.display = 'block';
+//         distributor2.style.display = 'none';
+//          distributor1Label.innerHTML = "Distributor"
+
+//         var substation_data = JSON.parse('{{ substations | tojson }}');
+//         console.log(substation_data);
+//         substation_data.forEach(substation_data => {
+//             var opt = document.createElement('option');
+//             opt.value = substation_data;
+//             opt.innerHTML = substation_data;
+//             uetclSubstation.appendChild(opt);
+//         });
+//     } 
+//     else if (category === 'Standalone') {
+//         distributor2.style.display = 'block';
+//         substationGroup.style.display = 'none';
+//          distributor1Label.innerHTML = "Distributor 1"
+//     } else {
+//         substationGroup.style.display = 'none';
+//         distributor2.style.display = 'none';
+//         distributor1Label.innerHTML = "Distributor"
+//         uetclSubstation.innerHTML = `<option selected value="substation_default_value">Select Substation</option>`;
+//     }
+// }
+
 
 
     // form validation on submission
     document.querySelector('form').addEventListener('submit', function(event) {
-        var rate1 = parseFloat(document.querySelector('input[name="Rate1"]').value);
-        var rate2 = parseFloat(document.querySelector('input[name="Rate2"]').value);
-        var rate3 = parseFloat(document.querySelector('input[name="Rate3"]').value);
-        var cumulativeImport = parseFloat(document.querySelector('input[name="CumulativeImport"]').value);
+        var rate1 = parseFloat(document.querySelector('input[name="Rate 1"]').value);
+        var rate2 = parseFloat(document.querySelector('input[name="Rate 2"]').value);
+        var rate3 = parseFloat(document.querySelector('input[name="Rate 3"]').value);
+        var cumulativeImport = parseFloat(document.querySelector('input[name="Cumulative Import"]').value);
 
-        var rate4 = parseFloat(document.querySelector('input[name="Rate4"]').value);
-        var rate5 = parseFloat(document.querySelector('input[name="Rate5"]').value);
-        var rate6 = parseFloat(document.querySelector('input[name="Rate6"]').value);
-        var cumulativeExport = parseFloat(document.querySelector('input[name="CumulativeExport"]').value);
+        var rate4 = parseFloat(document.querySelector('input[name="Rate 4"]').value);
+        var rate5 = parseFloat(document.querySelector('input[name="Rate 5"]').value);
+        var rate6 = parseFloat(document.querySelector('input[name="Rate 6"]').value);
+        var cumulativeExport = parseFloat(document.querySelector('input[name="Cumulative Export"]').value);
         
         console.log(`meter type is: ${meterType}`)
         if (meterType === "LG E650"){
@@ -260,22 +260,48 @@ document.getElementById('meterNumber').addEventListener('blur', function() {
     }
 });
     
-// const regex = /^\d+$/;
-// document.querySelector('form').addEventListener('input[type="number"]', function(event) {
-// //document.querySelectorAll('input[type="number"]'), function(event) {
-//     const inputValue = event.target.value;
-//     console.log(inputValue)
+const regex = /^\d+$/;
+document.querySelector('form').addEventListener('input', function(event) {
+//document.querySelectorAll('input[type="number"]'), function(event) {
+    const inputValue = event.target.value;
+    console.log(inputValue)
   
-//    if (!regex.test(inputValue)) {
-//         alert("Please enter only number. No + or - signs allowed");
-//         //event.target.value = inputValue.replace(/[+-]/g, '');
-//         event.target.value = inputValue.toString().replace(/[+-]/g, '');
-//     } 
-//   });    
+   if (!regex.test(inputValue)) {
+        alert("Please enter only number. No + or - signs allowed");
+        //event.target.value = inputValue.replace(/[+-]/g, '');
+        event.target.value = inputValue.toString().replace(/[+-]/g, '');
+    } 
+  });    
 
-// REMOVE + - SIGNS FROM NUMBERS
-function formatNumber(input) {
-            input.value = input.value.replace(/[+-]/g, "");
-        }
 
+  function updateSubstationOptions() {
+        console.log("function called")
+    var selectedCategory = document.getElementById('meterCategory').value;
+    console.log(selectedCategory)
+    var availableNodes = document.getElementById('nodeName');
+    $.ajax({
+        url: '/get_options',  // Flask endpoint
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ category: selectedCategory }),  // Send category data
+        dataType: 'json',
+            success: function (data) {
+                console.log("function data",data);
+                availableNodes.innerHTML = "";
+                //availableNodes.append('<option value="default_value" selected>--Select an Option--</option>'); // Default placeholder
+                availableNodes.innerHTML = `<option value="default_value" selected>Select an option</option>`   
+                data.forEach(data => {
+                    var opt = document.createElement('option');
+                    opt.value = data;
+                    opt.innerHTML = data;
+                    availableNodes.appendChild(opt);
+                });
+            },
+            error: function () {
+                alert('Failed to fetch options');
+            }
+        });
+    }
+  
+ 
 </script>

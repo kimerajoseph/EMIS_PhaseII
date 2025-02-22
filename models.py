@@ -67,4 +67,63 @@ class StandaloneNode(db.Model):
         return f"<StandaloneNode {self.node_name}>"
     
 
+class energyMeters(db.Model):
+    __tablename__ = 'energy_meters'
 
+    # Define columns
+    serial_no = db.Column(db.String(255), nullable=False, primary_key=True)
+    meter_category = db.Column(db.String(255), nullable=False)
+    node_name = db.Column(db.String(255), nullable=False)
+    meter_classification = db.Column(db.String(255), nullable=False)    
+    manufacturer = db.Column(db.String(255), nullable=False)
+    meter_type = db.Column(db.String(255), nullable=False)
+    YOM = db.Column(db.String(255), nullable=False)
+    accuracy = db.Column(db.String(255), nullable=False)
+    meter_usage = db.Column(db.String(255), nullable=False)
+    no_of_elements = db.Column(db.String(255), nullable=False)
+    CT_ratio = db.Column(db.String(255), nullable=False)
+    VT_ratio = db.Column(db.String(255), nullable=False)
+    added_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+    # String representation for easy debugging
+    def __repr__(self):
+        return f"<energyMeters {self.serial_no}>"
+    
+
+#MONTHLY DATA
+class monhtlyBillingData(db.Model):
+    __tablename__ = 'monthly_billing_data'
+
+    # Define columns
+    serial_no = db.Column(db.String(255), nullable=False, primary_key=True)
+    meter_category = db.Column(db.String(255), nullable=False)
+    node_name = db.Column(db.String(255), nullable=False)
+    billing_period = db.Column(db.Date, nullable=False)    
+    reading_date = db.Column(db.DateTime, nullable=False)
+    cumulative_import = db.Column(db.Float(15,2), nullable=False)
+    cumulative_export = db.Column(db.Float(15,2), nullable=False)
+    rate1 = db.Column(db.Float(15,2), nullable=False)
+    rate2 = db.Column(db.Float(15,2), nullable=False)
+    rate3 = db.Column(db.Float(15,2), nullable=False)
+    rate4 = db.Column(db.Float(15,2), nullable=False)
+    rate5 = db.Column(db.Float(15,2), nullable=False)
+    rate6 = db.Column(db.Float(15,2), nullable=False)
+    max_dem1 = db.Column(db.Float(15,2), nullable=False)
+    max_dem1_datatime = db.Column(db.DateTime, nullable=False)
+    max_dem2 = db.Column(db.Float(15,2), nullable=False)
+    max_dem2_datatime = db.Column(db.DateTime, nullable=False)
+    max_dem3 = db.Column(db.Float(15,2), nullable=False)
+    max_dem3_datatime = db.Column(db.DateTime, nullable=False)
+    reactive_import = db.Column(db.Float(15,2), nullable=False)
+    reactive_export = db.Column(db.Float(15,2), nullable=False)
+    apparent_import = db.Column(db.Float(15,2), nullable=False)
+    no_of_resets = db.Column(db.Integer(), nullable=False)
+    date_of_last_reset = db.Column(db.DateTime, nullable=False)
+    programing_count = db.Column(db.Integer(), nullable=False)
+    CT_ratio = db.Column(db.String(255), nullable=False)
+    VT_ratio = db.Column(db.String(255), nullable=False)
+    added_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+    # String representation for easy debugging
+    def __repr__(self):
+        return f"<monthly_billing_data {self.serial_no}>"

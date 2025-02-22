@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testing Form</title>
+    <form>
+        <label for="numberInput">Enter a number:</label>
+        <input type="number" id="numberInput" name="numberInput" onkeyup="formatNumber(this)">
+    
+        <label for="number2Input">Enter a number:</label>
+        <input type="number" id="numberInput2" name="numberInput2" onkeyup="formatNumber(this)">
+    </form>
+    
+    <script>
+        function formatNumber(input) {
+            input.value = input.value.replace(/[+-]/g, "");
+        }
+    </script>
+</head>
+<body>
+    
