@@ -5,4 +5,10 @@ ensure no drop down is sent with the default selected value
 use JS to change the select element color to warn user to select value
 
 FEB 21 2025
-- modify metering node form to include input for IPP name when user selects category IPP
+- modify metering node form to include input for IPP name when user selects category IPP 
+- add composit key (from a combination of primary keys) onto all tables
+- verification of the billing month when using uploaded files
+- verify meter number when file is uploaded in the front end
+- verify that both files have the same serial number for Pro100
+- combine TOU and Hist for Pro100. check and confirm both history and billing period
+- remove whitespace from all inputs (DO IT FROM FRONT END WITH JS) 
