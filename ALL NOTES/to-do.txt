@@ -12,3 +12,4 @@ FEB 21 2025
 - verify that both files have the same serial number for Pro100
 - combine TOU and Hist for Pro100. check and confirm both history and billing period
 - remove whitespace from all inputs (DO IT FROM FRONT END WITH JS) 
+- Data quality checks on CEWE Prometer 100. USE NET VALUES
