@@ -7,10 +7,24 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <div class="container mt-5 d-flex justify-content-center">
-        <div class="w-75">
+    <div class="container mt-5 justify-content-center">
+        <div class="w-75" name="subSelection", id="subSelection">
+            <h2 class="text-center">Choose Submission Method</h2>
+            <select class="form-control" id="submissionMethod" name="submissionMethod" onchange="toggleForm()">
+                <option selected value="default_value">Select Submission Method</option>
+                <option value="submitFiles">Submit Files</option>
+                <option value="fillOutForm">Fill Out Form</option>
+            </select>
+        </div>
+
+        <div class="w-75 col-12" name="subFile", id="subFiles">
+            <h2 class="text-center">Submit Files</h2>
+        
+        </div>
+
+        <div class="w-75" name="manualForm", id="manualForm">
             <h2 class="text-center">MONTHLY DATA SUBMISSION FORM</h2>
-            <form action="/monthly_billing_data_submission" method="POST">
+            <form action="/monthly_billing_data_submission" method="POST" name="manualForm" id="manualForm">
                 <div class="row g-3">
                     <div class="col-md-4">
             <label class="form-label">Select Category</label>

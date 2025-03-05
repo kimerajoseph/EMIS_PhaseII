@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Submission Form</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+</head>
+<body>
+
+<div class="container mt-5">
+    <!-- Submission Method Selection -->
+    <div class="col-12 text-center">
+        <h2>Choose Submission Method</h2>
+        <br>
+        <select class="form-control w-50 mx-auto" id="submissionMethod" name="submissionMethod" onchange="toggleForm()">
+            <option selected value="default_value">Select Submission Method</option>
+            <option value="submitFiles">Submit Files</option>
+            <option value="fillOutForm">Fill Out Form</option>
+        </select>
+    </div>
+
+    <!-- Submit Files Form -->
+<!-- Submit Files Form -->
+<div class="col-12 mt-4" id="fileFormContainer" style="display: none;">
+    <br>
+    <h2 class="text-center">Submit Energy Meter Download Files</h2>
+    <br>
+    <form action="/submit_files" method="POST" enctype="multipart/form-data" id="fileForm">
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label">Select Category</label>
+                <select class="form-control" id="meterCategory" name="meterCategory" onchange="updateOptions(this)">
+                    <option selected value="default_value">Select Category</option>
+                    <option value="Substation">Substation</option>
+                    <option value="Standalone">Standalone</option>
+                    <option value="IPP">IPP</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Select Node</label>
+                <select id="nodeName" class="form-control" name="nodeName" required>
+                    <option selected value="default_value">Select Node</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Billing Period</label>
+                <input type="date" class="form-control" name="billingPeriod">
+            </div>
+        </div>
+        <div class="mb-3 mt-3">
+            <label class="form-label">Upload Files</label>
+            <input class="form-control" type="file" id="fileInput" name="fileInput" accept=".csv, .xls, .xlsx" multiple>
+        </div>
+        <br>
+        <button type="submit" class="btn btn-primary w-100">Submit Files</button>
+    </form>
+    <br>
+</div>
+
+    <!-- Manual Form -->
+    <div class="w-75" name="manualForm", id="manualFormContainer" style="display: none;">
+        <br>
+        <br>
+        <h2 class="text-center">MONTHLY DATA SUBMISSION FORM</h2>
+        <form action="/monthly_billing_data_submission" method="POST" name="manualForm" id="manualForm">
+            <div class="row g-3">
+                <div class="col-md-4">
+        <label class="form-label">Select Category</label>
+        <select class="form-control" id="meterCategory" name="meterCategory" onchange="updateOptions()">
+            <option selected value="default_value">Select Category</option>
+            <option value="Substation">Substation</option>
+            <option value="Standalone">Standalone</option>
+            <option value="IPP">IPP</option>
+        </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="selectNode">Select Node</label>
+                    <select id="nodeName" class="form-control" name="nodeName" required>
+                        <option selected value="default_value">Select Node</option>
+                        <!-- <option value="Node1">Node1</option>
+                        <option value="Node2">Node2</option> -->
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Billing Period</label>
+                    <input type="date" class="form-control" name="billingPeriod">
+                </div>
+
+
+                <div class="col-md-4">
+                    <label class="form-label">Meter Number</label>
+                    <input type="text" class="form-control" name="serialNo" id="meterNumber">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Date & Time of Reading</label>
+                    <input type="datetime-local" class="form-control" name="DateTimeOfReading">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Cumulative Import</label>
+                    <input type="number" step="any" class="form-control" name="CumulativeImport" required onkeyup="formatNumber(this)">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Cumulative Export</label>
+                    <input type="number" step="any" class="form-control" name="CumulativeExport" required onkeyup="formatNumber(this)">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Rate 1</label>
+                    <input type="number" step="any" class="form-control" name="Rate1" required onkeyup="formatNumber(this)">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Rate 2</label>
+                    <input type="number" step="any" class="form-control" name="Rate2" required onkeyup="formatNumber(this)">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Rate 3</label>
+                    <input type="number" step="any" class="form-control" name="Rate3" required onkeyup="formatNumber(this)">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Rate 4</label>
+                    <input type="number" step="any" class="form-control" name="Rate4" onkeyup="formatNumber(this)">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Rate 5</label>
+                    <input type="number" step="any" class="form-control" name="Rate5" onkeyup="formatNumber(this)">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Rate 6</label>
+                    <input type="number" step="any" class="form-control" name="Rate6">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Max Dem 1</label>
+                    <input type="number" step="any" class="form-control" name="MaxDem1">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Max Dem 1 Time</label>
+                    <input type="datetime-local" class="form-control" name="MaxDem1DateTime">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Max Dem 2</label>
+                    <input type="number" class="form-control" name="MaxDem2" >
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Max Dem 2 Time</label>
+                    <input type="datetime-local" class="form-control" name="MaxDem2DateTime">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Max Dem 3</label>
+                    <input type="number" class="form-control" name="MaxDem3" >
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Max Dem 3 Time</label>
+                    <input type="datetime-local" class="form-control" name="MaxDem3DateTime">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Reactive Import</label>
+                    <input type="number" step="any" class="form-control" name="ReactiveImport" >
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Reactive Export</label>
+                    <input type="number" step="any" class="form-control" name="ReactiveExport" >
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Apparent Import</label>
+                    <input type="number" step="any" class="form-control" name="ApparentImport" >
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Number of Resets</label>
+                    <input type="number" class="form-control" name="NumberOfResets" >
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Date of Last Reset</label>
+                    <input type="datetime-local" class="form-control" name="DateOfLastReset">
+                </div>
+                <!-- <div class="col-md-4">
+                    <label class="form-label">Date and Time Submission</label>
+                    <input type="datetime-local" class="form-control" name="DateTime Submission">
+                </div> -->
+                <div class="col-md-4">
+                    <label class="form-label">Programming Count</label>
+                    <input type="number" class="form-control" name="ProgrammingCount" >
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">CT Ratio</label>
+                    <input type="number" class="form-control" name="CTRatio" step="1">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">VT Ratio</label>
+                    <input type="number" class="form-control" name="VTRatio" step="1" >
+                </div>
+            </div>
+            <br>
+            <div class="row mt-4">
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary w-100">Submit</button>
+                </div>
+                <br>
+                <br>
+            </div>
+            <br>
+            <br>
+        </form>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
+
+<style>
+    input.form-control, select.form-control {
+        border: 1px solid rgb(18, 18, 18);
+    }
+</style>
+
+<script>
+    function toggleForm() {
+        let submissionMethod = document.getElementById("submissionMethod").value;
+        document.getElementById("fileFormContainer").style.display = submissionMethod === "submitFiles" ? "block" : "none";
+        document.getElementById("manualFormContainer").style.display = submissionMethod === "fillOutForm" ? "block" : "none";
+    
+        // submissionMethod.addEventListener("change", function () {
+        //     document.querySelectorAll("form").forEach(form => {
+        //         form.reset();
+        //     });
+        // });
+
+    }
+    // Function to format number inputs
+    function formatNumber(input) {
+        input.value = input.value.replace(/[^0-9.]/g, "");
+    }
+
+    // Attach the function to all number inputs on page load
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll('input[type="number"]').forEach(input => {
+            input.addEventListener("blur", function () {
+                formatNumber(this);
+            });
+        });
+    });
+
+// Reset all forms on page load
+    document.addEventListener("DOMContentLoaded", function () {
+        // Select all forms and reset them
+        document.querySelectorAll("form").forEach(form => {
+            form.reset();
+        });
+    });
+
+// loading metering node options
+
+        function updateOptions(thisElement) {
+    console.log("function called")
+    var selectedCategory = thisElement.value;
+    console.log(selectedCategory)
+    var availableNodes = document.getElementById('nodeName');
+    $.ajax({
+        url: '/get_options',  // Flask endpoint
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ category: selectedCategory }),  // Send category data
+        dataType: 'json',
+            success: function (data) {
+                console.log("function data",data);
+                availableNodes.innerHTML = "";
+                //availableNodes.append('<option value="default_value" selected>--Select an Option--</option>'); // Default placeholder
+                availableNodes.innerHTML = `<option value="default_value" selected>Select an option</option>`   
+                data.forEach(data => {
+                    var opt = document.createElement('option');
+                    opt.value = data;
+                    opt.innerHTML = data;
+                    availableNodes.appendChild(opt);
+                });
+            },
+            error: function () {
+                alert('Failed to fetch options');
+            }
+        });
+    }
+</script>
