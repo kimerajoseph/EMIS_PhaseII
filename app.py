@@ -98,7 +98,10 @@ def store_energy_meters():
     print(form_data)
     #my_message="Data stored successfully"
     my_message = store_data_to_db.store_energy_meter_data(form_data,db)
-    return render_template('success.html', message=my_message)
+    if my_message == "Data stored successfully":
+        return render_template('success.html', message=my_message)
+    else:
+        return render_template('errors.html', message="record not stored. contact admin")
 
 # store metering billing data   
 @app.route('/monthly_billing_data_submission', methods=['POST'])
@@ -106,16 +109,28 @@ def monthly_billing_data_submission():
     form_data = request.form.to_dict()
     print(form_data)
     my_message=store_data_to_db.store_monthly_billing_data(form_data,db)
-    return render_template('success.html', message=my_message)
+    if my_message == "Data stored successfully":
+        return render_template('success.html', message=my_message)
+    else:
+        return render_template('errors.html', message="record not stored. contact admin")
+
+# store substation data
+@app.route('/substation_submission', methods=['POST'])
+def substation_submission():
+    form_data = request.form.to_dict()
+    print(form_data)
+    my_message=store_data_to_db.store_substation_data(form_data,db)
+
+    if my_message == "Data stored successfully":
+        return render_template('success.html', message=my_message)
+    else:
+        return render_template('errors.html', message="record not stored. contact admin")
 
 
-# @app.route('/store_metering_node', methods=['POST'])
-# def store_metering_node():
-#     form_data = request.form.to_dict()
-#     print(form_data)
-#     my_message="Data stored successfully"
-#     return render_template('success.html', message=my_message)
-
+# route to rende substations.html template. route name is  substation
+@app.route('/substation', methods=['POST'])
+def substation():
+    return render_template('substations.html')
 
 # User Registration
 @app.route('/register', methods=['POST'])

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Substation Form</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5 w-75">
+        <br>
+        <h2>Substation Form</h2>
+        <br>
+        <form name="substationForm" action="/substation_submission" method="POST">
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" id="name" name="name" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="location">Location</label>
+                    <input type="text" class="form-control" id="location" name="location" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="region">Region</label>
+                    <select id="region" class="form-control" name="region" required>
+                        <option value="default_value" selected>Select region</option>
+                        <option value="Northern">Northern</option>
+                        <option value="Eastern">Eastern</option>
+                        <option value="Central">Central</option>
+                        <option value="Western">Western</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="no_of_nodes">Number of Nodes</label>
+                    <input type="number" class="form-control" id="no_of_nodes" name="no_of_nodes" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="billing_nodes">Billing Nodes</label>
+                    <input type="number" class="form-control" id="billing_nodes" name="billing_nodes" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="energy_loss_nodes">Energy Loss Nodes</label>
+                    <input type="number" class="form-control" id="energy_loss_nodes" name="energy_loss_nodes" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="manned">Manned</label>
+                    <select id="manned" class="form-control" name="manned" required>
+                        <option value="default_value" selected>Select option</option>
+                        <option value="yes">yes</option>
+                        <option value="no">no</option>
+                    </select>
+                </div>
+            </div>
+            <br>
+            <button type="submit" class="btn btn-primary col-12">Submit</button>
+            <br>
+        </form>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+<style>
+    input.form-control, select.form-control {
+        border: 1px solid rgb(18, 18, 18);
+    }
+</style>
+
+<script>
+
+    document.querySelector('form[name="substationForm"]').addEventListener('submit', function(event) {
+        const inputs = document.querySelectorAll('input.form-control');
+        const selects = document.querySelectorAll('select.form-control');
+        let valid = true;
+
+        inputs.forEach(input => {
+            if (input.value.trim() === '') {
+                valid = false;
+                input.style.borderColor = 'red';
+            } else {
+                input.style.borderColor = 'rgb(18, 18, 18)';
+            }
+        });
+
+        selects.forEach(select => {
+            if (select.value === 'default_value') {
+                valid = false;
+                select.style.borderColor = 'red';
+            } else {
+                select.style.borderColor = 'rgb(18, 18, 18)';
+            }
+        });
+
+        if (!valid) {
+            event.preventDefault();
+            alert('Please fill out all fields correctly.');
+        }
+    });
+</script>

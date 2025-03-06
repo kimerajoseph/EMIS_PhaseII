@@ -1,5 +1,6 @@
 # models.py
 from database import db
+from sqlalchemy import Enum
 
 # User Model
 class User(db.Model):
@@ -44,7 +45,7 @@ class IPPNode(db.Model):
 
     # String representation for easy debugging
     def __repr__(self):
-        return f"<IPPNode {self.ipp} - {self.node_name}>"
+        return f"<IPPNode {self.ipp_name} - {self.node_name}>"
     
 
 class StandaloneNode(db.Model):
@@ -100,23 +101,23 @@ class monhtlyBillingData(db.Model):
     node_name = db.Column(db.String(255), nullable=False)
     billing_period = db.Column(db.Date, nullable=False)    
     reading_date = db.Column(db.DateTime, nullable=False)
-    cumulative_import = db.Column(db.Float(15,2), nullable=False)
-    cumulative_export = db.Column(db.Float(15,2), nullable=False)
-    rate1 = db.Column(db.Float(15,2), nullable=False)
-    rate2 = db.Column(db.Float(15,2), nullable=False)
-    rate3 = db.Column(db.Float(15,2), nullable=False)
-    rate4 = db.Column(db.Float(15,2), nullable=False)
-    rate5 = db.Column(db.Float(15,2), nullable=False)
-    rate6 = db.Column(db.Float(15,2), nullable=False)
-    max_dem1 = db.Column(db.Float(15,2), nullable=False)
+    cumulative_import = db.Column(db.Numeric(15, 2), nullable=False)
+    cumulative_export = db.Column(db.Numeric(15, 2), nullable=False)
+    rate1 = db.Column(db.Numeric(15, 2), nullable=False)
+    rate2 = db.Column(db.Numeric(15, 2), nullable=False)
+    rate3 = db.Column(db.Numeric(15, 2), nullable=False)
+    rate4 = db.Column(db.Numeric(15, 2), nullable=False)
+    rate5 = db.Column(db.Numeric(15, 2), nullable=False)
+    rate6 = db.Column(db.Numeric(15, 2), nullable=False)
+    max_dem1 = db.Column(db.Numeric(15, 2), nullable=False)
     max_dem1_datatime = db.Column(db.DateTime, nullable=False)
-    max_dem2 = db.Column(db.Float(15,2), nullable=False)
+    max_dem2 = db.Column(db.Numeric(15, 2), nullable=False)
     max_dem2_datatime = db.Column(db.DateTime, nullable=False)
-    max_dem3 = db.Column(db.Float(15,2), nullable=False)
+    max_dem3 = db.Column(db.Numeric(15, 2), nullable=False)
     max_dem3_datatime = db.Column(db.DateTime, nullable=False)
-    reactive_import = db.Column(db.Float(15,2), nullable=False)
-    reactive_export = db.Column(db.Float(15,2), nullable=False)
-    apparent_import = db.Column(db.Float(15,2), nullable=False)
+    reactive_import = db.Column(db.Numeric(15, 2), nullable=False)
+    reactive_export = db.Column(db.Numeric(15, 2), nullable=False)
+    apparent_import = db.Column(db.Numeric(15, 2), nullable=False)
     no_of_resets = db.Column(db.Integer(), nullable=False)
     date_of_last_reset = db.Column(db.DateTime, nullable=False)
     programing_count = db.Column(db.Integer(), nullable=False)
@@ -127,3 +128,23 @@ class monhtlyBillingData(db.Model):
     # String representation for easy debugging
     def __repr__(self):
         return f"<monthly_billing_data {self.serial_no}>"
+    
+
+
+
+class Substation(db.Model):
+    __tablename__ = 'substations'
+
+    # Define columns
+    name = db.Column(db.String(255), nullable=False, primary_key=True)
+    location = db.Column(db.String(255), nullable=False)
+    region = db.Column(db.String(255), nullable=False)
+    no_of_nodes = db.Column(db.Integer(), nullable=False)
+    billing_nodes = db.Column(db.Integer(), nullable=False)
+    energy_loss_nodes = db.Column(db.Integer(), nullable=False)
+    manned = db.Column(db.String(255), nullable=False)
+    added_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+    # String representation for easy debugging
+    def __repr__(self):
+        return f"<Substation {self.name}>"

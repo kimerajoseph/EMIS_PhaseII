@@ -1,4 +1,4 @@
-from models import IPPNode, SubstationNode, StandaloneNode, energyMeters,monhtlyBillingData
+from models import IPPNode, SubstationNode, StandaloneNode, energyMeters,monhtlyBillingData,Substation
 
 def store_node_data(form_data,db):
     if(form_data['category'] == 'IPP'):
@@ -116,6 +116,26 @@ def store_monthly_billing_data(form_data,db):
     )
     # Add the object to the session and commit the transaction
     db.session.add(new_billing_data)
+    db.session.commit()
+    #my_message="Data stored successfully"
+    return "Data stored successfully"
+
+# STORE SUBstation DATA 
+def store_substation_data(form_data,db):
+    new_substation = Substation(
+            
+    # Define columns    
+    name = form_data['name'],
+    location = form_data['location'],  
+    region = form_data['region'],
+    no_of_nodes = form_data['no_of_nodes'],  
+    billing_nodes = form_data['billing_nodes'],
+    energy_loss_nodes = form_data['energy_loss_nodes'], 
+    manned = form_data['manned']
+    )  
+
+    # Add the object to the session and commit the transaction
+    db.session.add(new_substation)
     db.session.commit()
     #my_message="Data stored successfully"
     return "Data stored successfully"
