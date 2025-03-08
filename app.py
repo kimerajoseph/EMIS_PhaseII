@@ -12,7 +12,7 @@ load_dotenv()
 from config import Config
 from database import db
 from models import User, SubstationNode, IPPNode, StandaloneNode
-import store_data_to_db
+import store_data_to_db, ajax_calls
 
 # username=os.getenv("USER")
 # password = os.getenv('PASSWORD')
@@ -58,12 +58,48 @@ def get_options():
     category = request.json.get('category')  # Get category from request
     print("selected category: ",category)
     if category == 'Substation':
-        data = ["Lugogo", "Mutundwe", "Kawanda", "Namanve", "Kapeeka"]
+        data = ajax_calls.get_substations()
+        return jsonify(data)  # Return as JSON
     elif category == 'IPP':
-        data = ['Ziba', 'Kikagati', 'Nkenda', 'Siti', 'Kabulasoke']
+        #data = ['Ziba', 'Kikagati', 'Nkenda', 'Siti', 'Kabulasoke']
+        data = ajax_calls.get_ipps()
+        return jsonify(data)  # Return as JSON
     elif category == 'Standalone':
-        data = ['Kasese', 'Kabale', 'Mbarara', 'Masaka', 'Mbale']
-    return jsonify(data)  # Return as JSON
+        data = []
+        return jsonify(data)  # Return as JSON
+    
+# ajax for updating node or substation options for energy meter form
+@app.route('/get_node_options', methods=['POST'])
+def get_node_options():
+    print("ajax called")
+    category = request.json.get('category')  # Get category from request
+    print("selected category: ",category)
+    if category == 'Substation':
+        data = ajax_calls.get_substations()
+        return jsonify(data)  # Return as JSON
+    elif category == 'IPP':
+        #data = ['Ziba', 'Kikagati', 'Nkenda', 'Siti', 'Kabulasoke']
+        data = ajax_calls.get_ipps()
+        return jsonify(data)  # Return as JSON
+    elif category == 'Standalone':
+        data = ajax_calls.get_standalones()
+        return jsonify(data)  # Return as JSON
+    
+
+# UPDATE SUBSTATIONS AND IPPS NODES
+@app.route('/get_ipp_substation_nodes', methods=['POST'])
+def get_ipp_substation_nodes():
+    print("ajax called")
+    ipp_substation = request.json.get('ipp_substation')  # Get category from request
+    category = request.json.get('category')  # Get category from request
+    print("selected category: ",ipp_substation)
+    if category == 'Substation':
+        data = ajax_calls.get_substation_nodes(ipp_substation)
+        return jsonify(data)  # Return as JSON
+    elif category == 'IPP':
+        #data = ['Ziba', 'Kikagati', 'Nkenda', 'Siti', 'Kabulasoke']
+        data = ajax_calls.get_ipp_nodes(ipp_substation)
+        return jsonify(data)  # Return as JSON
 
 @app.route('/energy_meters', methods=['POST'])
 def energy_meters():
@@ -89,7 +125,10 @@ def store_metering_node():
         #print(form_data)
     
     my_message = store_data_to_db.store_node_data(form_data,db)
-    return render_template('success.html', message=my_message)
+    if my_message == "Data stored successfully":
+        return render_template('success.html', message=my_message)
+    else:
+        return render_template('errors.html', message="record not stored. contact admin")
 
 # STORE ENERGY METER DATA
 @app.route('/store_energy_meters', methods=['POST'])
@@ -131,6 +170,25 @@ def substation_submission():
 @app.route('/substation', methods=['POST'])
 def substation():
     return render_template('substations.html')
+
+
+@app.route('/ipps_form', methods=['POST'])
+def ipps_form():
+    return render_template('ipps_form.html')
+
+# store ipps data
+@app.route('/ipps_submission', methods=['POST'])
+def ipps_submission():
+    form_data = request.form.to_dict()
+    print(form_data)
+    my_message=store_data_to_db.store_ipp_data(form_data,db)
+
+    if my_message == "Data stored successfully":
+        return render_template('success.html', message=my_message)
+    else:
+        return render_template('errors.html', message="record not stored. contact admin")
+    
+
 
 # User Registration
 @app.route('/register', methods=['POST'])

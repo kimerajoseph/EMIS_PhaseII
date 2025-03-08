@@ -173,35 +173,85 @@
     }
 </style>
 <script>
-    var meterNo = ""
-    var meterType = ""
-    var lastMonthCumulativeImport = 0.0
-    var lastMonthCumulativeExport = 0.0
-
-    // loading metering node options
+        var availableNodes = document.getElementById('nodeName');
+     var sub_ipp_name = document.getElementById('sub_ipp_name');
     function updateOptions() {
-    console.log("function called")
+        console.log("function called")
     var selectedCategory = document.getElementById('meterCategory').value;
     console.log(selectedCategory)
-    var availableNodes = document.getElementById('nodeName');
+   
     $.ajax({
-        url: '/get_options',  // Flask endpoint
+        url: '/get_node_options',  // Flask endpoint
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({ category: selectedCategory }),  // Send category data
         dataType: 'json',
             success: function (data) {
                 console.log("function data",data);
-                availableNodes.innerHTML = "";
+                if (data && Array.isArray(data) && data.length > 0 && selectedCategory !== "Standalone") {
+                    sub_ipp_name.style.display = "block";
+                    sub_ipp_name.innerHTML = "";
                 //availableNodes.append('<option value="default_value" selected>--Select an Option--</option>'); // Default placeholder
-                availableNodes.innerHTML = `<option value="default_value" selected>Select an option</option>`   
-                data.forEach(data => {
+                sub_ipp_name.innerHTML = `<option value="default_value" selected>Select an option</option>`   
+                data.forEach(item => {
                     var opt = document.createElement('option');
-                    opt.value = data;
-                    opt.innerHTML = data;
+                    opt.value = item["name"].toLowerCase();
+                    // convert data.name to lower case and set it as the option text                        
+                    opt.innerHTML = item["name"].toLowerCase();
+                    sub_ipp_name.appendChild(opt);
+                });
+            }
+
+            else if (data && Array.isArray(data) && data.length > 0 && selectedCategory === "Standalone"){
+                sub_ipp_name.style.display = "none";
+                availableNodes.innerHTML = `<option value="default_value" selected>Select an option</option>`   
+                data.forEach(item => {
+                    var opt = document.createElement('option');
+                    opt.value = item["name"].toLowerCase();
+                    // convert data.name to lower case and set it as the option text                        
+                    opt.innerHTML = item["name"].toLowerCase();
                     availableNodes.appendChild(opt);
                 });
-            },
+            }
+        },
+            error: function () {
+                alert('Failed to fetch options');
+            }
+        });
+    }
+
+// populate substation and IPP nodes
+function updateNodeOptions() {
+        console.log("function called")
+    var selected_ipp_substation = document.getElementById('sub_ipp_name').value;
+    var selectedCategory = document.getElementById('meterCategory').value;
+    console.log(selectedCategory)
+   
+    $.ajax({
+        url: '/get_ipp_substation_nodes',  // Flask endpoint
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ ipp_substation: selected_ipp_substation,category:selectedCategory }),  // Send category data
+        dataType: 'json',
+            success: function (data) {
+                console.log("function data",data);
+                sub_ipp_name.style.display = "block";
+                    availableNodes.innerHTML = "";
+                if (data && Array.isArray(data) && data.length > 0) {
+                    
+                //availableNodes.append('<option value="default_value" selected>--Select an Option--</option>'); // Default placeholder
+                availableNodes.innerHTML = `<option value="default_value" selected>Select an option</option>`   
+                data.forEach(item => {
+                    var opt = document.createElement('option');
+                    opt.value = item["name"].toLowerCase();
+                    // convert data.name to lower case and set it as the option text                        
+                    opt.innerHTML = item["name"].toLowerCase();
+                    availableNodes.appendChild(opt);
+                });
+            }
+
+   
+        },
             error: function () {
                 alert('Failed to fetch options');
             }
@@ -209,39 +259,6 @@
     }
 
 
-    // form validation on submission
-    document.querySelector('form').addEventListener('submit', function(event) {
-        var rate1 = parseFloat(document.querySelector('input[name="Rate1"]').value);
-        var rate2 = parseFloat(document.querySelector('input[name="Rate2"]').value);
-        var rate3 = parseFloat(document.querySelector('input[name="Rate3"]').value);
-        var cumulativeImport = parseFloat(document.querySelector('input[name="CumulativeImport"]').value);
-
-        var rate4 = parseFloat(document.querySelector('input[name="Rate4"]').value);
-        var rate5 = parseFloat(document.querySelector('input[name="Rate5"]').value);
-        var rate6 = parseFloat(document.querySelector('input[name="Rate6"]').value);
-        var cumulativeExport = parseFloat(document.querySelector('input[name="CumulativeExport"]').value);
-        
-        console.log(`meter type is: ${meterType}`)
-        if (meterType === "LG E650"){
-           console.log(`meter type is: ${meterType}`)
-            //console.log("computing for LG E650")
-            var netCumulativeExport = cumulativeExport - lastMonthCumulativeExport;
-            var netCumulativeImport = cumulativeImport - lastMonthCumulativeImport ;
-            cumulativeExport = netCumulativeExport;
-            cumulativeImport = netCumulativeImport;
-          }
-
-        if (rate1 + rate2 + rate3 !== cumulativeImport) {
-            alert("Please confirm Rates 1 - 3. Make sure they equal to cumulative import");
-            event.preventDefault();
-            return;
-        }
-
-        if (rate4 + rate5 + rate6 !== cumulativeExport) {
-            alert("Please confirm Rates 4 - 6. Make sure they equal to cumulative export");
-            event.preventDefault();
-        }      
-    });
 
 
     // add event listener to the form

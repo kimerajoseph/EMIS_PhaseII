@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Metering Node Form</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script> -->
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
 </head>
@@ -23,8 +24,8 @@
                     </select>
                 </div>
                 <div class="form-group col-md-6" id="substation-group">
-                    <label for="uetclSubstation" id="uetclSubstationLabel">Substation</label>
-                    <select class="form-control" id="uetclSubstation" name="uetclSubstation">
+                    <label for="availableOptions" id="uetclSubstationLabel">Substation</label>
+                    <select class="form-control" id="selectedOption" name="selectedOption">
                         <!-- <option selected value="default_value">Select Substation</option> -->
                     </select>
                 </div>
@@ -119,20 +120,24 @@
 
         </form>
     </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script> -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
     <!-- <link href="css/bootstrap.min.css" rel="stylesheet"> -->
     <!-- <script src="js/jquery-3.5.1.slim.min.js"></script>
     <script src="js/popper.min.js"></script>
     <script src="js/bootstrap.min.js"></script> -->
 
-    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <!-- <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script> -->
     <!-- <script type="text/javascript" src="{{ url_for('static', filename='js/popper.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-3.5.1.slim.min.js') }}"></script> -->
 
     <!-- <script type="text/javascript" src="js_scripts/metering_node.js"></script> -->
-    <script type="text/javascript" src="{{ url_for('static', filename='js_scripts/metering_node.js') }}"></script>
+    <!-- <script type="text/javascript" src="{{ url_for('static', filename='js_scripts/metering_node.js') }}"></script> -->
   
 </body>
 </html>
@@ -150,65 +155,122 @@ if (window.history.replaceState) {
 }
     // var substation_data = ['Lugogo','Kla_Nrth']
     // var ipp_data = ['Sindila','Mahoma']
-    var labelToAlter = document.getElementById('uetclSubstationLabel');
-    function updateSubstationOptions() {
-    const category = document.getElementById('category').value;
-    const substationGroup = document.getElementById('substation-group');
-    const uetclSubstation = document.getElementById('uetclSubstation');
-    var substations = ""
-    var distributor2 = document.getElementById('distributor2Div');
-    var distributor1Label = document.getElementById('distributor1Label');
-    //distributor2.style.display = 'none';
+    //var labelToAlter = document.getElementById('uetclSubstationLabel');
+//     function updateOptions() {
+//     const category = document.getElementById('category').value;
+//     const substationGroup = document.getElementById('substation-group');
+//     const uetclSubstation = document.getElementById('uetclSubstation');
+//     var substations = ""
+//     var distributor2 = document.getElementById('distributor2Div');
+//     var distributor1Label = document.getElementById('distributor1Label');
+//     //distributor2.style.display = 'none';
 
-    if (category === 'Substation') {
-        labelToAlter.innerHTML = "Substation"
-        substationGroup.style.display = 'block';
-        uetclSubstation.innerHTML = ""
-        uetclSubstation.innerHTML = `<option selected value="default_value">Select Substation</option>`
-        distributor2.style.display = 'none';
-        distributor1Label.innerHTML = "Distributor"
-        substation_data = JSON.parse('{{ substations | tojson }}');
+//     if (category === 'Substation') {
+//         labelToAlter.innerHTML = "Substation"
+//         substationGroup.style.display = 'block';
+//         uetclSubstation.innerHTML = ""
+//         uetclSubstation.innerHTML = `<option selected value="default_value">Select Substation</option>`
+//         distributor2.style.display = 'none';
+//         distributor1Label.innerHTML = "Distributor"
+//         substation_data = JSON.parse('{{ substations | tojson }}');
         
-        console.log(substation_data);
-        substation_data.forEach(substation_data => {
-            var opt = document.createElement('option');
-            opt.value = substation_data;
-            opt.innerHTML = substation_data;
-            uetclSubstation.appendChild(opt);
-        });
-    } 
+//         console.log(substation_data);
+//         substation_data.forEach(substation_data => {
+//             var opt = document.createElement('option');
+//             opt.value = substation_data;
+//             opt.innerHTML = substation_data;
+//             uetclSubstation.appendChild(opt);
+//         });
+//     } 
     
-    else if (category === 'IPP') {
+//     else if (category === 'IPP') {
+//         labelToAlter.innerHTML = "IPP name"
+//         substationGroup.style.display = 'block';
+//         distributor2.style.display = 'none';
+//         uetclSubstation.innerHTML = ""
+//         uetclSubstation.name = "ippName"
+//         uetclSubstation.innerHTML = `<option selected value="default_value">Select IPP</option>`
+//         distributor1Label.innerHTML = "Distributor"
+//        ipp_data = JSON.parse('{{ ipps | tojson }}');        
+//         console.log(ipp_data);
+//         ipp_data.forEach(ipp_data => {
+//             var opt = document.createElement('option');
+//             opt.value = ipp_data;
+//             opt.innerHTML = ipp_data;
+//             uetclSubstation.appendChild(opt);
+//         });
+//     } 
+  
+    
+//     else if (category === 'Standalone') {
+//         distributor2.style.display = 'block';
+//         substationGroup.style.display = 'none';
+//          distributor1Label.innerHTML = "Distributor 1"
+//     } 
+//     else {
+//         substationGroup.style.display = 'none';
+//         distributor2.style.display = 'none';
+//         distributor1Label.innerHTML = "Distributor"
+//         uetclSubstation.innerHTML = `<option selected value="substation_default_value">Select Substation</option>`;
+//     }
+// }
+
+
+    
+// loading metering node options
+var distributor2 = document.getElementById('distributor2Div');
+var distributor1Label = document.getElementById('distributor1Label');
+var labelToAlter = document.getElementById('uetclSubstationLabel');
+var substationGroup = document.getElementById('substation-group');
+
+function updateSubstationOptions() {
+    console.log("function called")
+    const selectedCategory = document.getElementById('category').value;
+    console.log(selectedCategory)
+    var availableNodes = document.getElementById('selectedOption');
+
+    // update FORM accordingly
+         if (selectedCategory === 'IPP') {
         labelToAlter.innerHTML = "IPP name"
         substationGroup.style.display = 'block';
         distributor2.style.display = 'none';
-        uetclSubstation.innerHTML = ""
-        uetclSubstation.name = "ippName"
-        uetclSubstation.innerHTML = `<option selected value="default_value">Select IPP</option>`
-        distributor1Label.innerHTML = "Distributor"
-       ipp_data = JSON.parse('{{ ipps | tojson }}');        
-        console.log(ipp_data);
-        ipp_data.forEach(ipp_data => {
-            var opt = document.createElement('option');
-            opt.value = ipp_data;
-            opt.innerHTML = ipp_data;
-            uetclSubstation.appendChild(opt);
-        });
-    } 
-  
-    
-    else if (category === 'Standalone') {
+         }
+           else if (selectedCategory === 'Substation') {
+        labelToAlter.innerHTML = "Substation"
+        substationGroup.style.display = 'block';
+        distributor2.style.display = 'none';
+             }
+    else if (selectedCategory === 'Standalone') {
         distributor2.style.display = 'block';
         substationGroup.style.display = 'none';
          distributor1Label.innerHTML = "Distributor 1"
-    } 
-    else {
-        substationGroup.style.display = 'none';
-        distributor2.style.display = 'none';
-        distributor1Label.innerHTML = "Distributor"
-        uetclSubstation.innerHTML = `<option selected value="substation_default_value">Select Substation</option>`;
     }
-}
+
+    $.ajax({
+        url: '/get_options',  // Flask endpoint
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ category: selectedCategory }),  // Send category data
+        dataType: 'json',
+            success: function (data) {
+                if (data && Array.isArray(data) && data.length > 0) {
+                console.log("function data",data);
+                availableNodes.innerHTML = "";
+                //availableNodes.append('<option value="default_value" selected>--Select an Option--</option>'); // Default placeholder
+                availableNodes.innerHTML = `<option value="default_value" selected>Select an option</option>`   
+                data.forEach(data => {
+                    var opt = document.createElement('option');
+                    opt.value = data['name'].toLowerCase();
+                    opt.innerHTML = data['name'].toLowerCase();
+                    availableNodes.appendChild(opt);
+                });
+            }
+        },
+            error: function () {
+                alert('Failed to fetch options');
+            }
+        });
+    }
 </script>
 
 

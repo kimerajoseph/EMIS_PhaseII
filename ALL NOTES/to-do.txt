@@ -17,3 +17,12 @@ FEB 21 2025
 MARCH 05, 2025
 - Modified monthly data submission
 - Github still uses chatGPT_test.html as name for the new submission page
+
+MARCH 06, 2025
+- data validation in front end. march node to meter no when submitting files
+- march entered meter no with node on manual entry file 
+
+MONTHLY DATA
+- user can only select certain dates (first day of the month)
+- monthly billing data does not need primary keys
+- check if energy meter exists in the list 

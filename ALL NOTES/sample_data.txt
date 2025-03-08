@@ -25,3 +25,8 @@ STANDALONE DATA NODE
      'Reactive Export': '0909', 'Apparent Import': '090', 'Number of Resets': '090', 
      'Date of Last Reset': '2025-02-17T11:17', 'Programming Count': '090', 
      'CT Ratio': '09', 'VT Ratio': '090'}
+
+
+     {'category': 'Substation', 'availableOptions': '[object Object]', 'location': 'Kampala', 
+     'node_name': 'TX1', 'distributor_1': 'UEDCL', 'distributor_2': 'NA', 'region': 'Central', 
+     'type': 'Billing', 'voltageLevel': '33', 'remote': 'No'}

@@ -27,32 +27,45 @@
     <br>
     <h2 class="text-center">Submit Energy Meter Download Files</h2>
     <br>
-    <form action="/submit_files" method="POST" enctype="multipart/form-data" id="fileForm">
+    <form action="/submit_files" method="POST" enctype="multipart/form-data" id="fileForm" name="fileForm">
         <div class="row g-3">
             <div class="col-md-4">
                 <label class="form-label">Select Category</label>
-                <select class="form-control" id="meterCategory" name="meterCategory" onchange="updateOptions(this)">
+                <select class="form-control" id="meterCategoryFile" name="meterCategoryFile" onchange="updateOptions(this)">
                     <option selected value="default_value">Select Category</option>
                     <option value="Substation">Substation</option>
                     <option value="Standalone">Standalone</option>
                     <option value="IPP">IPP</option>
                 </select>
             </div>
+           
+            <div class="col-md-4">          
+                    <label for="subIppNameFile" id="subIppNameFileLabel" class="form-label">Ipp/Substation name</label>
+                    <select id="subIppNameFile" class="form-control" name="subIppNameFile" onchange="updateNodeOptions(this)" required>
+                        <option selected value="default_value">Select Meter Category</option>
+                       
+                    </select>                
+            </div>
             <div class="col-md-4">
                 <label class="form-label">Select Node</label>
-                <select id="nodeName" class="form-control" name="nodeName" required>
+                <select id="nodeNameFile" class="form-control" name="nodeNameFile" required>
                     <option selected value="default_value">Select Node</option>
                 </select>
             </div>
+        
+        </div>
+<br>
+        <div class="row g-3">
             <div class="col-md-4">
                 <label class="form-label">Billing Period</label>
-                <input type="date" class="form-control" name="billingPeriod">
+                <input type="date" class="form-control" name="billingPeriodFile">
             </div>
-        </div>
-        <div class="mb-3 mt-3">
-            <label class="form-label">Upload Files</label>
-            <input class="form-control" type="file" id="fileInput" name="fileInput" accept=".csv, .xls, .xlsx" multiple>
-        </div>
+            <div class="col-md-4">
+                <label class="form-label">Upload Files</label>
+                <input class="form-control" type="file" id="fileInput" name="fileInput" accept=".csv, .xls, .xlsx" multiple>
+                </div>
+            </div>      
+     
         <br>
         <button type="submit" class="btn btn-primary w-100">Submit Files</button>
     </form>
@@ -60,24 +73,37 @@
 </div>
 
     <!-- Manual Form -->
-    <div class="w-75" name="manualForm", id="manualFormContainer" style="display: none;">
+    <div class="col-12" name="manualForm", id="manualFormContainer" style="display: none;">
         <br>
         <br>
         <h2 class="text-center">MONTHLY DATA SUBMISSION FORM</h2>
+        <br>
         <form action="/monthly_billing_data_submission" method="POST" name="manualForm" id="manualForm">
             <div class="row g-3">
                 <div class="col-md-4">
         <label class="form-label">Select Category</label>
-        <select class="form-control" id="meterCategory" name="meterCategory" onchange="updateOptions()">
+        <select class="form-control" id="meterCategoryManual" name="meterCategoryManual" onchange="updateOptions(this)">
             <option selected value="default_value">Select Category</option>
             <option value="Substation">Substation</option>
             <option value="Standalone">Standalone</option>
             <option value="IPP">IPP</option>
         </select>
                 </div>
+            </div>
+<br>
+                <div class="row g-3">
+
+                <div class="form-group col-md-4">
+                    <label for="subIppNameManual" id="meterCategoryLabel">Ipp/Substation name</label>
+                    <select id="subIppNameManual" class="form-control" name="subIppNameManual" onchange="updateNodeOptions(this)" required>
+                        <option selected value="default_value">Select Meter Category</option>
+                       
+                    </select>
+                </div>
+
                 <div class="col-md-4">
                     <label for="selectNode">Select Node</label>
-                    <select id="nodeName" class="form-control" name="nodeName" required>
+                    <select id="nodeNameManual" class="form-control" name="nodeNameManual" required>
                         <option selected value="default_value">Select Node</option>
                         <!-- <option value="Node1">Node1</option>
                         <option value="Node2">Node2</option> -->
@@ -85,7 +111,7 @@
                 </div>
                 <div class="col-md-4">
                     <label class="form-label">Billing Period</label>
-                    <input type="date" class="form-control" name="billingPeriod">
+                    <input type="date" class="form-control" name="billingPeriodManual">
                 </div>
 
 
@@ -224,12 +250,6 @@
         let submissionMethod = document.getElementById("submissionMethod").value;
         document.getElementById("fileFormContainer").style.display = submissionMethod === "submitFiles" ? "block" : "none";
         document.getElementById("manualFormContainer").style.display = submissionMethod === "fillOutForm" ? "block" : "none";
-    
-        // submissionMethod.addEventListener("change", function () {
-        //     document.querySelectorAll("form").forEach(form => {
-        //         form.reset();
-        //     });
-        // });
 
     }
     // Function to format number inputs
@@ -255,33 +275,241 @@
     });
 
 // loading metering node options
+var meterCategoryManual = document.getElementById('meterCategoryManual');
+var availableNodesManual = document.getElementById('nodeNameManual');
+var subIppNameManual = document.getElementById('subIppNameManual');
 
-        function updateOptions(thisElement) {
-    console.log("function called")
+var meterCategoryFile = document.getElementById('meterCategoryFile');
+var availableNodesFile = document.getElementById('nodeNameFile');
+var subIppNameFile = document.getElementById('subIppNameFile');
+
+var subIppSelectToPopulate = ""
+
+function updateOptions(thisElement) {
+        console.log("function called")
     var selectedCategory = thisElement.value;
+    var subIppSelect = thisElement.name
     console.log(selectedCategory)
-    var availableNodes = document.getElementById('nodeName');
+             
+
     $.ajax({
-        url: '/get_options',  // Flask endpoint
+        url: '/get_node_options',  // Flask endpoint
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({ category: selectedCategory }),  // Send category data
         dataType: 'json',
             success: function (data) {
                 console.log("function data",data);
-                availableNodes.innerHTML = "";
+                if (data && Array.isArray(data) && data.length > 0 && selectedCategory !== "Standalone") {
+                    console.log("CALLED NPT STN")
+                    if ( subIppSelect === "subIppNameManual") {
+                        subIppSelectToPopulate = subIppNameManual
+                    }
+                    else if (subIppSelect === "subIppNameFile"){
+                        subIppSelectToPopulate = subIppNameFile
+                    }                    
+                    console.log("input to populate", subIppSelectToPopulate)
+                    subIppSelectToPopulate.style.display = "block";
+                    subIppSelectToPopulate.innerHTML = "";
+                    availableNodesManual.innerHTML = ""       
+                    availableNodesFile.innerHTML = ""  
                 //availableNodes.append('<option value="default_value" selected>--Select an Option--</option>'); // Default placeholder
-                availableNodes.innerHTML = `<option value="default_value" selected>Select an option</option>`   
-                data.forEach(data => {
+                subIppSelectToPopulate.innerHTML = `<option value="default_value" selected>Select an option</option>`   
+                data.forEach(item => {
                     var opt = document.createElement('option');
-                    opt.value = data;
-                    opt.innerHTML = data;
+                    opt.value = item["name"].toLowerCase();
+                    // convert data.name to lower case and set it as the option text                        
+                    opt.innerHTML = item["name"].toLowerCase();
+                    subIppSelectToPopulate.appendChild(opt);
+                });
+            }
+
+            else if (data && Array.isArray(data) && data.length > 0 && selectedCategory === "Standalone"){
+                sub_ipp_name.style.display = "none";
+                availableNodes.innerHTML = `<option value="default_value" selected>Select an option</option>`   
+                data.forEach(item => {
+                    var opt = document.createElement('option');
+                    opt.value = item["name"].toLowerCase();
+                    // convert data.name to lower case and set it as the option text                        
+                    opt.innerHTML = item["name"].toLowerCase();
                     availableNodes.appendChild(opt);
                 });
-            },
+            }
+        },
             error: function () {
                 alert('Failed to fetch options');
             }
         });
     }
+
+// populate substation and IPP nodes
+function updateNodeOptions(thisElement) {
+        console.log("function called")
+    var selectedCategory = document.getElementById('meterCategory').value;
+    var selected_ipp_substation = thisElement.value;     
+    var inputName = thisElement.name;
+    var selectElementToPopulate = ""
+    
+    console.log(selectedCategory,selected_ipp_substation)
+   
+    $.ajax({
+        url: '/get_ipp_substation_nodes',  // Flask endpoint
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ ipp_substation: selected_ipp_substation,category:selectedCategory }), 
+        dataType: 'json',
+            success: function (data) {
+                console.log("function data",data);
+                sub_ipp_name.style.display = "block";
+                    if(inputName === 'sub_ipp_name'){
+                        selectElementToPopulate = document.getElementById('nodeNameFile');
+                        
+                    }
+                    else{
+                        selectElementToPopulate = document.getElementById('nodeName');
+                    }
+                    selectElementToPopulate.innerHTML = "";
+                if (data && Array.isArray(data) && data.length > 0 ) {
+                
+                    
+                //availableNodes.append('<option value="default_value" selected>--Select an Option--</option>'); // Default placeholder
+                selectElementToPopulate.innerHTML = `<option value="default_value" selected>Select an option</option>`   
+                data.forEach(item => {
+                    var opt = document.createElement('option');
+                    opt.value = item["name"].toLowerCase();
+                    // convert data.name to lower case and set it as the option text                        
+                    opt.innerHTML = item["name"].toLowerCase();
+                    selectElementToPopulate.appendChild(opt);
+                });
+            }
+
+   else{
+    alert("No nodes to display. Please add nodes first")
+    selectElementToPopulate.innerHTML = "";
+   }
+        },
+            error: function () {
+                alert('Failed to fetch options');
+            }
+        });
+    }
+
+
+
+
+
+
+
+// form validation for file submission
+document.getElementById("fileForm").addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent form submission until validation is done
+
+    let fileInput = document.getElementById("fileInput");
+    let files = fileInput.files;
+    console.log(files[0].name, files[1].name);
+
+    if (files.length !== 2) {
+        alert("You must upload exactly two files.");
+        return;
+    }
+
+    function getFirstWord(filename) {
+        return filename.split("_")[0]; // Extract first word before "_"
+    }
+
+    let firstWord1 = getFirstWord(files[0].name);
+    let firstWord2 = getFirstWord(files[1].name);
+
+    if (firstWord1 !== firstWord2) {
+        alert("Files are not from the same energy meter.");
+        return;
+    }
+
+    alert("Files are valid! Proceeding...");
+    // If valid, you can submit the form programmatically
+    // event.target.submit();
+});
+
+
+// form validation for manual submission
+// add event listener to the form to check values of all select elements. if value is equal to default_value, alert
+//  user to select an option
+// document.getElementById("manualForm").addEventListener("submit", function(event) {
+//   // Prevent form submission until validation is done
+//     let form = document.getElementById("manualForm");
+//     let selectElements = form.querySelectorAll("select");
+
+//     selectElements.forEach(selectElement => {
+//         if (selectElement.value === "default_value") {
+//             alert("Please select an option for all select elements.");
+//             selectElement.style.border = "1px solid red";
+//             event.preventDefault(); 
+//         }
+//         else{
+//             selectElement.style.border = "1px solid black";
+//             event.target.submit();
+
+//         }
+//     });
+
+//     let dateInputs = document.querySelectorAll("#manualForm input[type='date'], #manualForm input[type='datetime-local']");
+//     dateInputs.forEach(dateInput => {
+//         if (dateInput.value === "") {
+//             alert("Please fill out all date inputs.");
+//             dateInput.style.border = "1px solid red";
+//             event.preventDefault(); 
+//         }
+//         else{
+//             dateInput.style.border = "1px solid black";
+//             event.target.submit();
+//         }
+//     });
+
+    
+//     // If valid, you can submit the form programmatically
+//     // event.target.submit();
+// });
+
+
+document.getElementById("manualForm").addEventListener("submit", function(event) {
+    event.preventDefault(); // Stop form submission initially
+    let form = document.getElementById("manualForm");
+    let selectElements = form.querySelectorAll("select");
+    let dateInputs = form.querySelectorAll("input[type='date'], input[type='datetime-local']");
+    
+    let isValid = true; // Flag to track validation
+    let errorMessage = ""; // Store all error messages
+
+    // Validate all select elements
+    selectElements.forEach(selectElement => {
+        if (selectElement.value === "default_value") {
+            selectElement.style.border = "1px solid red";
+            isValid = false;
+            errorMessage = "Please select an option for all select elements.";
+        } else {
+            selectElement.style.border = "1px solid black"; // Reset border
+        }
+    });
+
+    // Validate all date inputs
+    dateInputs.forEach(dateInput => {
+        if (dateInput.value === "") {
+            dateInput.style.border = "1px solid red";
+            isValid = false;
+            errorMessage = "Please fill out all required date fields.";
+        } else {
+            dateInput.style.border = "1px solid black"; // Reset border
+        }
+    });
+
+    // Show error alert if needed
+    if (!isValid) {
+        alert(errorMessage);
+        return;
+    }
+
+    // If everything is valid, submit the form
+    form.submit();
+});
+
 </script>

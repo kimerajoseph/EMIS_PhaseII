@@ -26,6 +26,17 @@
                         <option value="IPP">IPP</option>
                     </select>
                 </div>
+            </div>
+            <div class="form-row">
+
+                <div class="form-group col-md-4">
+                    <label for="sub_ipp_name" id="meterCategoryLabel">Ipp/Substation name</label>
+                    <select id="sub_ipp_name" class="form-control" name="sub_ipp_name" onchange="updateNodeOptions()" required>
+                        <option selected value="default_value">Select Meter Category</option>
+                       
+                    </select>
+                </div>
+
                 <div class="form-group col-md-4">
                     <label for="selectNode">Select Node</label>
                     <select id="nodeName" class="form-control" name="nodeName" required>
@@ -192,34 +203,97 @@ input.form-control, select.form-control {
 </style>
 
 <script>
+     var availableNodes = document.getElementById('nodeName');
+     var sub_ipp_name = document.getElementById('sub_ipp_name');
     function updateOptions() {
         console.log("function called")
     var selectedCategory = document.getElementById('meterCategory').value;
     console.log(selectedCategory)
-    var availableNodes = document.getElementById('nodeName');
+   
     $.ajax({
-        url: '/get_options',  // Flask endpoint
+        url: '/get_node_options',  // Flask endpoint
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({ category: selectedCategory }),  // Send category data
         dataType: 'json',
             success: function (data) {
                 console.log("function data",data);
-                availableNodes.innerHTML = "";
+                if (data && Array.isArray(data) && data.length > 0 && selectedCategory !== "Standalone") {
+                    sub_ipp_name.style.display = "block";
+                    sub_ipp_name.innerHTML = "";
                 //availableNodes.append('<option value="default_value" selected>--Select an Option--</option>'); // Default placeholder
-                availableNodes.innerHTML = `<option value="default_value" selected>Select an option</option>`   
-                data.forEach(data => {
+                sub_ipp_name.innerHTML = `<option value="default_value" selected>Select an option</option>`   
+                data.forEach(item => {
                     var opt = document.createElement('option');
-                    opt.value = data;
-                    opt.innerHTML = data;
+                    opt.value = item["name"].toLowerCase();
+                    // convert data.name to lower case and set it as the option text                        
+                    opt.innerHTML = item["name"].toLowerCase();
+                    sub_ipp_name.appendChild(opt);
+                });
+            }
+
+            else if (data && Array.isArray(data) && data.length > 0 && selectedCategory === "Standalone"){
+                sub_ipp_name.style.display = "none";
+                availableNodes.innerHTML = `<option value="default_value" selected>Select an option</option>`   
+                data.forEach(item => {
+                    var opt = document.createElement('option');
+                    opt.value = item["name"].toLowerCase();
+                    // convert data.name to lower case and set it as the option text                        
+                    opt.innerHTML = item["name"].toLowerCase();
                     availableNodes.appendChild(opt);
                 });
-            },
+            }
+        },
             error: function () {
                 alert('Failed to fetch options');
             }
         });
     }
+
+// populate substation and IPP nodes
+function updateNodeOptions() {
+        console.log("function called")
+    var selected_ipp_substation = document.getElementById('sub_ipp_name').value;
+    var selectedCategory = document.getElementById('meterCategory').value;
+    console.log(selectedCategory)
+   
+    $.ajax({
+        url: '/get_ipp_substation_nodes',  // Flask endpoint
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ ipp_substation: selected_ipp_substation,category:selectedCategory }),  // Send category data
+        dataType: 'json',
+            success: function (data) {
+                console.log("function data",data);
+                sub_ipp_name.style.display = "block";
+                    availableNodes.innerHTML = "";
+                if (data && Array.isArray(data) && data.length > 0) {
+                    
+                //availableNodes.append('<option value="default_value" selected>--Select an Option--</option>'); // Default placeholder
+                availableNodes.innerHTML = `<option value="default_value" selected>Select an option</option>`   
+                data.forEach(item => {
+                    var opt = document.createElement('option');
+                    opt.value = item["name"].toLowerCase();
+                    // convert data.name to lower case and set it as the option text                        
+                    opt.innerHTML = item["name"].toLowerCase();
+                    availableNodes.appendChild(opt);
+                });
+            }
+
+   
+        },
+            error: function () {
+                alert('Failed to fetch options');
+            }
+        });
+    }
+
+
+
+
+
+
+
 
     // populate the meter type drop down
     document.getElementById("manufacturer").addEventListener("change", function() {

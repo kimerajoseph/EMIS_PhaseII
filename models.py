@@ -1,6 +1,7 @@
 # models.py
 from database import db
 from sqlalchemy import Enum
+import uuid
 
 # User Model
 class User(db.Model):
@@ -92,11 +93,12 @@ class energyMeters(db.Model):
     
 
 #MONTHLY DATA
-class monhtlyBillingData(db.Model):
+class monthlyBillingData(db.Model):
     __tablename__ = 'monthly_billing_data'
 
     # Define columns
-    serial_no = db.Column(db.String(255), nullable=False, primary_key=True)
+    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()), unique=True, nullable=False)
+    serial_no = db.Column(db.String(255), nullable=False)
     meter_category = db.Column(db.String(255), nullable=False)
     node_name = db.Column(db.String(255), nullable=False)
     billing_period = db.Column(db.Date, nullable=False)    
@@ -148,3 +150,18 @@ class Substation(db.Model):
     # String representation for easy debugging
     def __repr__(self):
         return f"<Substation {self.name}>"
+    
+class IPP(db.Model):
+    __tablename__ = 'ipps'
+
+    # Define columns
+    name = db.Column(db.String(255), nullable=False, primary_key=True)
+    location = db.Column(db.String(255), nullable=False)
+    region = db.Column(db.String(255), nullable=False)
+    no_of_billing_nodes = db.Column(db.Integer(), nullable=False)
+    capacity = db.Column(db.Float, nullable=False)
+    added_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+
+    # String representation for easy debugging
+    def __repr__(self):
+        return f"<IPP {self.name}>"

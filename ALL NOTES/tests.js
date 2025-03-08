@@ -1,6 +1,22 @@
-let inputValue = "123+456-789";
+xl = [
+    {
+        "name": "Kampala North"
+    },
+    {
+        "name": "Lugogo"
+    },
+    {
+        "name": "Mutundwe"
+    },
+    {
+        "name": "Namungoona"
+    },
+    {
+        "name": "Queens Way"
+    }
+]
 
-// Remove + and - signs
-let cleanedValue = inputValue.replace(/[+-]/g, '');
-
-console.log(cleanedValue);  // "123456789"
+xl.forEach(function (item) {
+    item["name"] = item["name"].toLowerCase();
+    console.log(item["name"]);
+});
