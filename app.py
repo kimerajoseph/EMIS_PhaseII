@@ -12,7 +12,7 @@ load_dotenv()
 from config import Config
 from database import db
 from models import User, SubstationNode, IPPNode, StandaloneNode
-import store_data_to_db, ajax_calls
+import store_data_to_db, ajax_calls, store_data_from_files
 
 # username=os.getenv("USER")
 # password = os.getenv('PASSWORD')
@@ -29,6 +29,17 @@ app.config.from_object(Config)
 db.init_app(app)
 # db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
+
+# Folder to store uploaded files
+UPLOAD_FOLDER = 'File_Uploads'
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+# Set allowed extensions for security reasons
+ALLOWED_EXTENSIONS = {'xls', 'csv','xlsx'}
+
+# Check if the file extension is allowed
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 if db:
     print("Connected to database")
@@ -188,6 +199,30 @@ def ipps_submission():
     else:
         return render_template('errors.html', message="record not stored. contact admin")
     
+# process data from files
+# Route to handle file upload
+@app.route('/submit_files', methods=['POST'])
+def submit_files():
+    file = request.files['file']
+    meter_no = file[0].split("_")[0].strip()
+    print("METER NO: ",meter_no)
+
+    data = request.form.to_dict()
+    print(data)
+
+    if file and allowed_file(file.filename):
+        filename = file.filename
+        file_path = os.path.join(UPLOAD_FOLDER, filename)
+        
+        # Save the file
+        file.save(file_path)
+        
+        # Process the file
+        my_message = store_data_from_files.confirm_meter_type(db, data,file_path,meter_no)
+        #process_file(file_path)
+        
+        #my_message="Registration is successful"
+        return render_template('success.html', message = my_message)
 
 
 # User Registration
@@ -262,6 +297,15 @@ def metering_billing():
     meter_type = random.choice(['LG E650', 'A1700'])
     print(meter_no)
     return jsonify({meter_no: meter_no,'cumulative_import':1290, 'cumulative_export':1100, 'meter_type':meter_type})  # Return as JSON
+
+# get all meter numbers 
+@app.route('/get_meter_numbers', methods=['POST'])
+def get_meter_numbers():
+    #meter_numbers = ['MTR-001', 'MTR-002', 'MTR-003', 'MTR-004', 'MTR-005']
+    meter_numbers = ajax_calls.get_meter_numbers(db)
+    return jsonify(meter_numbers)
+
+
 
 
 if __name__ == '__main__':

@@ -75,6 +75,7 @@ class energyMeters(db.Model):
     # Define columns
     serial_no = db.Column(db.String(255), nullable=False, primary_key=True)
     meter_category = db.Column(db.String(255), nullable=False)
+    sub_ipp_name = db.Column(db.String(255), nullable=False)
     node_name = db.Column(db.String(255), nullable=False)
     meter_classification = db.Column(db.String(255), nullable=False)    
     manufacturer = db.Column(db.String(255), nullable=False)

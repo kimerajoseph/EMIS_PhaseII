@@ -26,3 +26,10 @@ MONTHLY DATA
 - user can only select certain dates (first day of the month)
 - monthly billing data does not need primary keys
 - check if energy meter exists in the list 
+
+MARCH 09 2025
+- check the category,ipp/substation name, meter type etc and march it with the serial number
+- get the energy meter type (serialNoMeterType)
+- send the meter type along with the data 
+
+- process the files from the form

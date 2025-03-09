@@ -99,6 +99,7 @@ def store_energy_meter_data(form_data, db):
     if existing_meter:
         # If the meter already exists, update the fields with the new data
         existing_meter.meter_category = form_data['meter_category']
+        existing_meter.sub_ipp_name = form_data['sub_ipp_name']
         existing_meter.node_name = form_data['nodeName']
         existing_meter.meter_classification = form_data['meter_classification']
         existing_meter.manufacturer = form_data['manufacturer']
@@ -120,6 +121,7 @@ def store_energy_meter_data(form_data, db):
         new_energy_meter = energyMeters(
             serial_no=form_data['serial_no'],
             meter_category=form_data['meter_category'],
+            sub_ipp_name = form_data['sub_ipp_name'],
             node_name=form_data['nodeName'],
             meter_classification=form_data['meter_classification'],
             manufacturer=form_data['manufacturer'],
@@ -143,14 +145,14 @@ def store_energy_meter_data(form_data, db):
 def store_monthly_billing_data(form_data, db):
     # Check if the record already exists in the database
     existing_record = monthlyBillingData.query.filter_by(
-        serial_no=form_data['serialNo'], billing_period=form_data['billingPeriod']
+        serial_no=form_data['serialNo'], billing_period=form_data['billingPeriodManual']
     ).first()
 
     if existing_record:
         # Update existing record
         print("record exists")
-        existing_record.meter_category = form_data['meterCategory']
-        existing_record.node_name = form_data['nodeName']
+        existing_record.meter_category = form_data['meterCategoryManual']
+        existing_record.node_name = form_data['nodeNameManual']
         existing_record.reading_date = form_data['DateTimeOfReading'].replace('T', ' ') if 'DateTimeOfReading' in form_data else None
         existing_record.cumulative_import = form_data['CumulativeImport']
         existing_record.cumulative_export = form_data['CumulativeExport']
@@ -179,9 +181,9 @@ def store_monthly_billing_data(form_data, db):
     else:
         # Insert new record
         new_billing_data = monthlyBillingData(
-            meter_category=form_data['meterCategory'],
-            node_name=form_data['nodeName'],
-            billing_period=form_data['billingPeriod'],
+            meter_category=form_data['meterCategoryManual'],
+            node_name=form_data['nodeNameManual'],
+            billing_period=form_data['billingPeriodManual'],
             serial_no=form_data['serialNo'],
             reading_date=form_data['DateTimeOfReading'].replace('T', ' ') if 'DateTimeOfReading' in form_data else None,
             cumulative_import=form_data['CumulativeImport'],
@@ -273,5 +275,10 @@ def store_ipp_data(form_data, db):
     # Commit the transaction
     db.session.commit()
     return message
+
+# store data using files
+def store_data_from_file(file, db):
+    # Read the file and store the data in the database
+    pass
 
     

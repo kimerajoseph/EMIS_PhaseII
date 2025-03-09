@@ -1,5 +1,5 @@
 #from flask import jsonify
-from models import Substation,IPP,StandaloneNode,IPPNode,SubstationNode
+from models import Substation,IPP,StandaloneNode,IPPNode,SubstationNode,energyMeters
 
 #@app.route('/get_substations', methods=['GET'])
 def get_substations():
@@ -69,3 +69,25 @@ def get_ipp_nodes(ipp_substation):
     print("LIST: ",ipp_nodes_list)
     # Return as JSON
     return ipp_nodes_list
+
+
+# get meter numbers
+def get_meter_numbers(db):
+    print("ajax called in backend")
+
+    meter_number_list = []
+    meter_number_and_type = []
+    meters = energyMeters.query.with_entities(energyMeters.serial_no, energyMeters.meter_type,
+            energyMeters.meter_category,energyMeters.sub_ipp_name,).all()
+
+    # Loop through the meters and create the dictionary structure
+    for meter in meters:
+        meter_number_and_type.append({
+            "serial_no": meter.serial_no,
+            "meter_type": meter.meter_type,
+            "meter_category":meter.meter_category,
+            "sub_ipp_name":meter.sub_ipp_name
+        })
+        meter_number_list.append(meter.serial_no)
+    print(meter_number_and_type, meter_number_list)
+    return meter_number_list,meter_number_and_type

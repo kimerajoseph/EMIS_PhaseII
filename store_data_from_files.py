@@ -3,6 +3,7 @@ import numpy as np
 import openpyxl
 from datetime import datetime
 import gc
+from models import energyMeters
 
 
 def store_pro100_data(files, db):
@@ -61,3 +62,21 @@ def store_pro100_data(files, db):
         df[column] = pd.NA
 
 
+def confirm_meter_type(db, data, filepath,meter_no):
+    meter = db.session.query(energyMeters).filter(energyMeters.serial_no == meter_no).first()
+    print("METER: ", meter)
+    if meter.meter_type == "LGE650":
+        print("meter is Landis and Gyr")
+        return "Data stored successfully"
+
+    elif meter.meter_type == "CEWE Prometer 100":
+        print("meter is Pro100")
+        return "Data stored successfully"
+
+    elif meter.meter_type == "CEWE Prometer":
+        print("meter is Pro100")
+        return "Data stored successfully"
+
+    elif meter.meter_type == "Elster A1700":
+        print("meter is Elster A1700")
+        return "Data stored successfully"
