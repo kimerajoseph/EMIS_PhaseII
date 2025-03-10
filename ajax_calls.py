@@ -78,7 +78,7 @@ def get_meter_numbers(db):
     meter_number_list = []
     meter_number_and_type = []
     meters = energyMeters.query.with_entities(energyMeters.serial_no, energyMeters.meter_type,
-            energyMeters.meter_category,energyMeters.sub_ipp_name,).all()
+            energyMeters.meter_category,energyMeters.sub_ipp_name,energyMeters.node_name).all()
 
     # Loop through the meters and create the dictionary structure
     for meter in meters:
@@ -86,7 +86,8 @@ def get_meter_numbers(db):
             "serial_no": meter.serial_no,
             "meter_type": meter.meter_type,
             "meter_category":meter.meter_category,
-            "sub_ipp_name":meter.sub_ipp_name
+            "sub_ipp_name":meter.sub_ipp_name,
+            "node_name": meter.node_name
         })
         meter_number_list.append(meter.serial_no)
     print(meter_number_and_type, meter_number_list)

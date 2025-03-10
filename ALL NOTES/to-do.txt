@@ -33,3 +33,6 @@ MARCH 09 2025
 - send the meter type along with the data 
 
 - process the files from the form
+
+- IF ENERGY METER WITH SAME SERIAL NO EXIST, REPLACE
+- IF THE category, sub_ipp_name and node_name are same, replace everything

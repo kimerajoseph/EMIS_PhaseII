@@ -1,15 +1,18 @@
 
-//energyMeterList = ['37890', 'WP0934']
+xx=[{'serial_no': '67563259', 'meter_type': 'LGE650', 'meter_category': 'Substation', 'sub_ipp_name': 'kampala north'}, {'serial_no': 'WP020204', 'meter_type': 'CEWE Prometer 100', 'meter_category': 'Standalone', 'sub_ipp_name': 'default_value'}]
 
-// serialNo = '8'
-// if (!serialNo.includes(energyMeterList)) {
-//     console.log("Meter exists in the list!");
+var serial_no = "67563259"
+
+xx.forEach(element => {
+    if(element['serial_no'] === serial_no){
+        console.log("FOUND")
+    } 
+});
+
+
+let nodeDetails = xx.find(item => 
+    item['sub_ipp_name'] === 'kampala north' && item['category'] === "Substation"
     
-// }
-
-let energyMeterList = ['37890', 'WP0934'];
-let meterToCheck = 'WP0934';
-
-if (!energyMeterList.includes(meterToCheck)) {
-    console.log("Meter not found.");
-} 
+);
+//print(nodeDetails)
+console.log(nodeDetails)

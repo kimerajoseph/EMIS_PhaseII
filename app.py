@@ -4,6 +4,8 @@ from flask_bcrypt import Bcrypt
 import pymysql
 import random
 import os
+#from flask_login import current_user, LoginManager, login_manager
+from flask_login import LoginManager, UserMixin, login_user, login_required, current_user,logout_user
 #from python_scripts import app_variables
 from dotenv import load_dotenv
 load_dotenv()
@@ -30,6 +32,9 @@ db.init_app(app)
 # db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 
+login_manager = LoginManager()
+login_manager.init_app(app)
+
 # Folder to store uploaded files
 UPLOAD_FOLDER = 'File_Uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -49,16 +54,21 @@ if db:
 # cursor = connection.cursor()
 
 # MODELS HERE
-
 with app.app_context():
     db.create_all()  # Create database tables
     print("Database tables created")
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
 
 @app.route('/')
 def home():
     return render_template('index.html')
 
 @app.route('/error', methods=['POST'])
+@login_required
 def error():
     return render_template('home.html')
 
@@ -125,6 +135,7 @@ def metering_node():
     return render_template('metering_node.html', substations = substations, ipps=ipps)
 
 @app.route('/store_metering_node', methods=['POST'])
+@login_required
 def store_metering_node():
     form_data = request.form.to_dict()
     print(form_data)
@@ -143,6 +154,7 @@ def store_metering_node():
 
 # STORE ENERGY METER DATA
 @app.route('/store_energy_meters', methods=['POST'])
+@login_required
 def store_energy_meters():
     form_data = request.form.to_dict()
     print(form_data)
@@ -155,6 +167,7 @@ def store_energy_meters():
 
 # store metering billing data   
 @app.route('/monthly_billing_data_submission', methods=['POST'])
+@login_required
 def monthly_billing_data_submission():
     form_data = request.form.to_dict()
     print(form_data)
@@ -166,6 +179,7 @@ def monthly_billing_data_submission():
 
 # store substation data
 @app.route('/substation_submission', methods=['POST'])
+@login_required
 def substation_submission():
     form_data = request.form.to_dict()
     print(form_data)
@@ -203,26 +217,41 @@ def ipps_submission():
 # Route to handle file upload
 @app.route('/submit_files', methods=['POST'])
 def submit_files():
-    file = request.files['file']
-    meter_no = file[0].split("_")[0].strip()
-    print("METER NO: ",meter_no)
+    print("function for files called")
+    files_sent = request.files['fileInput']
+    
+    print("file is : ", files_sent.filename)
+    if len(request.files.getlist("fileInput")) == 1:
+        print(len(request.files.getlist("fileInput")))
+        meter_no = files_sent.filename[3:].split("-")[0].strip()
+        #filename[3:].split("-")[0].strip()
+        print("METER NO: ",meter_no)
+
+    # if "files" not in request.files or not request.files.getlist("fileInput"):
+    #     return render_template('errors.html', message="record not stored. contact admin")
+
+    # meter_no = files_sent[0].split("_")[0].strip()
+    # print("METER NO: ",meter_no)
 
     data = request.form.to_dict()
     print(data)
 
-    if file and allowed_file(file.filename):
-        filename = file.filename
-        file_path = os.path.join(UPLOAD_FOLDER, filename)
+    if files_sent and allowed_file(files_sent.filename):
+        filename = files_sent.filename
+
+        manufacturer_folder = os.path.join(UPLOAD_FOLDER, data['meterTypeFile'])
+        os.makedirs(manufacturer_folder, exist_ok=True) 
+
+        file_path = os.path.join(manufacturer_folder, filename)
         
         # Save the file
-        file.save(file_path)
+        files_sent.save(file_path)
         
         # Process the file
-        my_message = store_data_from_files.confirm_meter_type(db, data,file_path,meter_no)
+        my_message = store_data_from_files.confirm_meter_type(file_path,data,db,filename)
         #process_file(file_path)
-        
-        #my_message="Registration is successful"
-        return render_template('success.html', message = my_message)
+        if my_message == "Data stored successfully":
+            return render_template('success.html', message = my_message)
 
 
 # User Registration
@@ -246,15 +275,15 @@ def register():
 # User Login
 @app.route('/login', methods=['POST'])
 def login():
-    print("function called")
+    #print("function called")
     email = request.form['email']
     password = request.form['password']  
     user = User.query.filter_by(email=email).first()
 
     if user and bcrypt.check_password_hash(user.password, password):
-        session['user_id'] = user.id
-        #my_message="logged in successfully"
-        return render_template('home.html')
+        login_user(user)
+        #print(user.name, user.email)
+        return render_template('home.html', current_user = user )
     else:
         print("user not found")
         return render_template('errors.html', message="user not found. check email or register first")
@@ -271,7 +300,8 @@ def dashboard():
 # Logout
 @app.route('/logout')
 def logout():
-    session.pop('user_id', None)
+    #session.pop('user_id', None)
+    logout_user()
     # flash('You have been logged out.', 'info')
     # return redirect(url_for('home'))
     return render_template('index.html')

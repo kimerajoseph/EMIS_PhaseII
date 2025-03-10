@@ -80,3 +80,58 @@ def confirm_meter_type(db, data, filepath,meter_no):
     elif meter.meter_type == "Elster A1700":
         print("meter is Elster A1700")
         return "Data stored successfully"
+    
+def process_landis_data(filepath,data, db,filename):
+    # Read the Excel file
+    serial_no = filename[3:].split("-")[0].strip()
+    serial_no
+    df = pd.read_excel(filepath)
+    df = df.drop(index=0).reset_index(drop=True)
+
+    df = df.drop(df.columns[0], axis=1)
+    units = ['kWh', 'kVAh','kvarh','MVA']
+    max_dem_time = ['9.6.1;','9.6.2;','9.6.3;']
+    #print(df.columns)
+    for column in df.columns.to_list()[1:]:
+        if any(substring in column for substring in units):
+            new_column_name = column.split(":", 1)[1].split(' ')[0].split(';')[0]
+            #print(column)
+            df = df.rename(columns={column: new_column_name})
+
+        elif any(substring in column for substring in max_dem_time):
+            new_column_name = f"{column.split(':', 1)[1].split(';')[0]}_MDT"
+            #print(column)
+            df = df.rename(columns={column: new_column_name})
+        
+
+    df['9.6.3_MDT'] = df['9.6.3_MDT'].str.split('(', n=1).str[0]
+    df['9.6.2_MDT'] = df['9.6.2_MDT'].str.split('(', n=1).str[0]
+    df['9.6.1_MDT'] = df['9.6.1_MDT'].str.split('(', n=1).str[0]
+
+    df['9.6.3_MDT'] = pd.to_datetime(df['9.6.3_MDT'])
+    df['9.6.2_MDT'] = pd.to_datetime(df['9.6.2_MDT'])
+    df['9.6.1_MDT'] = pd.to_datetime(df['9.6.1_MDT'])
+
+    new_df_columns = {'1.9.1':'rate1', '1.9.2':'rate2', '1.9.3':'rate3', '2.9.1':'rate4', '2.9.2':'rate5',
+       '2.9.3':'rate6', '2.8.0':'cumulative_export', '10.8.0':'apparent_export', 
+       '4.8.0':'reactive_export', '1.8.0':'cumulative_import', '9.8.0':'apparent_import', 
+       '3.8.0':'reactive_import', '9.6.1':'max_dem1','9.6.1_MDT':'max_dem1_datetime',
+         '9.6.2':'max_dem2', '9.6.2_MDT':'max_dem2_datetime', '9.6.3':'max_dem3', 
+         '9.6.3_MDT':'max_dem3_datetime'}
+    df = df.rename(columns=new_df_columns)
+    df = df.rename(columns={'0-0:1.0.0':'billing_period'})
+    new_df_columns = ['rate1','rate2','rate3','rate4','rate5','rate6','cumulative_export','apparent_export', 
+                    'reactive_export','cumulative_import','apparent_import','reactive_import', 
+                    'max_dem1','max_dem1_datetime','max_dem2','max_dem2_datetime','max_dem3','max_dem3_datetime']
+    df = df[new_df_columns]
+
+    df['serial_no'] = serial_no 
+    df['reading_date'] = datetime.now().replace(second=0, microsecond=0)
+    df['vt_ratio'] = pd.NA  
+    df['ct_ratio'] = pd.NA  
+    df['no_of_resets'] = pd.NA  
+    df['date_of_last_reset'] = pd.NA  
+    df['programing_count'] = pd.NA  
+
+    return "Data stored successfully"
+

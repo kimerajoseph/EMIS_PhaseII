@@ -218,59 +218,82 @@ function updateNodeOptionsManual() {
         return filename.split("_")[0]; // Extract first word before "_"
     }
 
-// form validation for file submission
-document.getElementById("fileForm").addEventListener("submit", function(event) {
-    event.preventDefault(); // Prevent form submission until validation is done
-    let form = document.getElementById("fileForm");
-
-    let fileInput = document.getElementById("fileInput");
-    let files = fileInput.files;
-    console.log(files);
-    var category = document.getElementById("meterCategoryFile").value;
-    var subIppName = document.getElementById("subIppNameFile").value;
-    var nodeDetails = ""
-
-    serialNoMeterType.forEach(function(item) {
-        if (item.sub_ipp_name === subIppName && item.category === category) {
-            console.log("Match found:", item);
-            nodeDetails = item
+    document.getElementById("fileForm").addEventListener("submit", function(event) {
+        event.preventDefault(); // Prevent form submission until validation is done
+    
+        let form = document.getElementById("fileForm");
+        let meterTypeFile = document.getElementById("meterTypeFile");
+        let fileInput = document.getElementById("fileInput");
+        let files = fileInput.files;
+        var nodeDetails = ""
+    
+        let category = document.getElementById("meterCategoryFile").value.trim();
+        let subIppName = document.getElementById("subIppNameFile").value.trim();
+        let nodeNameFile = document.getElementById("nodeNameFile").value.trim();
+    
+        if (!serialNoMeterType || serialNoMeterType.length === 0) {
+            alert("Error: serialNoMeterType data is missing!");
+            return;
         }
+    
+        serialNoMeterType.forEach(element => {
+            console.log("ITEM IS: ", element)
+            console.log(subIppName, category)
+            if(element['sub_ipp_name'] === subIppName && element['meter_category'] == category && element['node_name'] === nodeNameFile){
+                nodeDetails = element
+            } 
+        });
+        // let nodeDetails = serialNoMeterType.find(item => 
+        //     item.sub_ipp_name.trim() === subIppName && item.category.trim() === category
+        // );
+    
+        if (!nodeDetails) {
+            alert("No matching meter details found.");
+            return;
+        }
+    
+        meterTypeFile.value = nodeDetails['meter_type'];
+        console.log("Assigned value:", nodeDetails['meter_type']);
+    
+        if (!files || files.length === 0) {
+            alert("Please select a file to upload.");
+            return;
+        }
+    
+        if (nodeDetails['meter_type'] === "CEWE Prometer 100" || nodeDetails['meter_type'] === "CEWE Prometer") {
+            if (files.length !== 2) {
+                alert("You must upload exactly two files.");
+                return;
+            } else {
+                let meterNo1 = getFirstWord(files[0].name);
+                let meterNo2 = getFirstWord(files[1].name);
+    
+                if (!energyMeterList.includes(meterNo1)) {
+                    alert("Meter number does not exist in the list! Please add the meter to the database first.");
+                    return;
+                }
+    
+                if (meterNo1 !== meterNo2) {
+                    alert("Files are not from the same energy meter.");
+                    return;
+                }
+            }
+        } else if (nodeDetails['meter_type'] === "Elster A1700" || nodeDetails['meter_type'] === "LGE650") {
+            if (files.length !== 1) {
+                alert("You must upload exactly one file.");
+                return;
+            }
+        }
+    
+        // If everything is valid, submit the form
+        form.submit();
     });
-
-    //serialNoMeterType = data
-    if (nodeDetails['meter_type'] === "CEWE Prometer 100" || nodeDetails['meter_type'] === "CEWE Prometer" ) {
-        if (files.length !== 2) {
-            alert("You must upload exactly two files.");
-            return;
-        }
-    else if(files.length === 2){
-        let meterNo1 = getFirstWord(files[0].name);
-        let meterNo2 = getFirstWord(files[1].name);
     
-        if (!energyMeterList.includes(meterNo1)) {
-            //console.log("Meter exists in the list!");
-            alert("Meter number does exists in the list!. Please add the meter to DB first");
-            return;
-        }
+    // Ensure this function is defined somewhere in your script
+    function getFirstWord(str) {
+        return str.split(" ")[0]; // Extracts the first word from a string
+    }
     
-        if (meterNo1 !== meterNo2) {
-            alert("Files are not from the same energy meter.");
-            return;
-        }
-    }
-        
-    }
-
-    else if(nodeDetails['meter_type'] === "Elster A1700" || nodeDetails['meter_type'] === "LGE650"){
-        if (files.length !== 1) {
-            alert("You must upload exactly one file.");
-            return;
-        }
-    }
-     // If everything is valid, submit the form
-     form.submit();
-});
-
 // form validation for manual submission
 document.getElementById("manualForm").addEventListener("submit", function(event) {
     event.preventDefault(); // Stop form submission initially

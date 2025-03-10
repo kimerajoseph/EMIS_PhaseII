@@ -116,6 +116,34 @@ def store_energy_meter_data(form_data, db):
         
         return "Data stored successfully"
     
+    # Check if a meter with the same category, node_name, and sub_ipp_name exists eg from meter replacement
+    existing_node_meter = energyMeters.query.filter_by(
+        meter_category=form_data['meter_category'],
+        node_name=form_data['nodeName'],
+        sub_ipp_name=form_data['sub_ipp_name'],
+        meter_usage = form_data['meter_usage']
+    ).first()
+
+    if existing_node_meter:
+        # If the node meter exists, update its values
+        existing_meter.serial_no = form_data['serial_no']
+        existing_meter.meter_category = form_data['meter_category']
+        existing_meter.sub_ipp_name = form_data['sub_ipp_name']
+        existing_meter.node_name = form_data['nodeName']
+        existing_meter.meter_classification = form_data['meter_classification']
+        existing_meter.manufacturer = form_data['manufacturer']
+        existing_meter.meter_type = form_data['meter_type']
+        existing_meter.YOM = form_data['YOM']
+        existing_meter.accuracy = form_data['accuracy']
+        existing_meter.meter_usage = form_data['meter_usage']
+        existing_meter.no_of_elements = form_data['no_of_elements']
+        existing_meter.CT_ratio = form_data['CT_ratio']
+        existing_meter.VT_ratio = form_data['VT_ratio']
+        
+        db.session.commit()  # Commit the updates
+
+        return "Data stored successfully"
+   
     else:
         # If the meter does not exist, create a new record
         new_energy_meter = energyMeters(
