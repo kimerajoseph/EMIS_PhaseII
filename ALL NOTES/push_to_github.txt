@@ -19,6 +19,7 @@ https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a
 
 DELETE REPO 
 rm -rf .git
+
 ADD REMOTE REPO
 git remote add origin hhttps://github.com/kimerajoseph/EMIS_PhaseII.git
 

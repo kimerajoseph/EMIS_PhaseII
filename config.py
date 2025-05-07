@@ -15,5 +15,13 @@ class Config:
     SQLALCHEMY_DATABASE_URI = f'mysql+pymysql://{username}:{password}@{host}:{port}/{database}'
     SECRET_KEY = os.urandom(12).hex()
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    MAIL_SERVER = os.getenv("MAIL_SERVER")
+    MAIL_PORT = os.getenv("MAIL_PORT")
+    MAIL_USERNAME = os.getenv("MAIL_USERNAME")
+    MAIL_PASSWORD = os.getenv("MAIL_PASSWORD")
+    MAIL_SERVER = os.getenv("MAIL_SERVER")
+    MAIL_USE_TLS = True
+    MAIL_USE_SSL = False
+
 
 

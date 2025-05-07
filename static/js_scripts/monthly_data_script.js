@@ -217,7 +217,7 @@ function updateNodeOptionsManual() {
     function getFirstWord(filename) {
         return filename.split("_")[0]; // Extract first word before "_"
     }
-
+// form validation using files
     document.getElementById("fileForm").addEventListener("submit", function(event) {
         event.preventDefault(); // Prevent form submission until validation is done
     
@@ -265,8 +265,13 @@ function updateNodeOptionsManual() {
                 alert("You must upload exactly two files.");
                 return;
             } else {
-                let meterNo1 = getFirstWord(files[0].name);
-                let meterNo2 = getFirstWord(files[1].name);
+                // let meterNo1 = getFirstWord(files[0].name);
+                // let meterNo2 = getFirstWord(files[1].name);
+                console.log(files[0].name)
+                let meterNo1 = files[0].name.split("_")[0]
+                let meterNo2 = files[1].name.split("_")[0]
+                console.log("meter No1 is: ", meterNo1)
+                console.log("meter list: ",energyMeterList)
     
                 if (!energyMeterList.includes(meterNo1)) {
                     alert("Meter number does not exist in the list! Please add the meter to the database first.");

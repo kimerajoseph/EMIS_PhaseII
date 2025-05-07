@@ -180,6 +180,7 @@ def store_monthly_billing_data(form_data, db):
         # Update existing record
         print("record exists")
         existing_record.meter_category = form_data['meterCategoryManual']
+        existing_record.sub_ipp_name = form_data['subIppNameManual']
         existing_record.node_name = form_data['nodeNameManual']
         existing_record.reading_date = form_data['DateTimeOfReading'].replace('T', ' ') if 'DateTimeOfReading' in form_data else None
         existing_record.cumulative_import = form_data['CumulativeImport']

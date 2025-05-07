@@ -7,6 +7,7 @@ import os
 #from flask_login import current_user, LoginManager, login_manager
 from flask_login import LoginManager, UserMixin, login_user, login_required, current_user,logout_user
 #from python_scripts import app_variables
+from flask_mail import Mail, Message
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -42,6 +43,12 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 # Set allowed extensions for security reasons
 ALLOWED_EXTENSIONS = {'xls', 'csv','xlsx'}
 
+# Configure Flask-Mail (set these in your app config)
+mail = Mail(app)
+
+def generate_otp():
+    return str(random.randint(100000, 999999))
+
 # Check if the file extension is allowed
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -70,7 +77,7 @@ def home():
 @app.route('/error', methods=['POST'])
 @login_required
 def error():
-    return render_template('home.html')
+    return render_template('index.html')
 
 # ajax for populating dropdown
 @app.route('/get_options', methods=['POST'])
@@ -216,77 +223,152 @@ def ipps_submission():
 # process data from files
 # Route to handle file upload
 @app.route('/submit_files', methods=['POST'])
+@login_required
 def submit_files():
-    print("function for files called")
+    #print("function for files called")
     files_sent = request.files['fileInput']
-    
+    data = request.form.to_dict()    
     print("file is : ", files_sent.filename)
-    if len(request.files.getlist("fileInput")) == 1:
-        print(len(request.files.getlist("fileInput")))
-        meter_no = files_sent.filename[3:].split("-")[0].strip()
-        #filename[3:].split("-")[0].strip()
-        print("METER NO: ",meter_no)
-
-    # if "files" not in request.files or not request.files.getlist("fileInput"):
-    #     return render_template('errors.html', message="record not stored. contact admin")
-
-    # meter_no = files_sent[0].split("_")[0].strip()
-    # print("METER NO: ",meter_no)
-
-    data = request.form.to_dict()
-    print(data)
-
-    if files_sent and allowed_file(files_sent.filename):
+    #current_user = user.name
+    files_paths = []
+    # save file to server
+    if files_sent and allowed_file(files_sent.filename) and len(request.files.getlist("fileInput")) == 1:
         filename = files_sent.filename
-
         manufacturer_folder = os.path.join(UPLOAD_FOLDER, data['meterTypeFile'])
         os.makedirs(manufacturer_folder, exist_ok=True) 
-
         file_path = os.path.join(manufacturer_folder, filename)
-        
         # Save the file
         files_sent.save(file_path)
+
+        if data['meterTypeFile'] == "LGE650":             
+            my_message = store_data_from_files.process_landis_data(db,file_path,filename,data)
+            if my_message == "Data stored successfully":
+                return render_template('success.html', message = my_message)
         
-        # Process the file
-        my_message = store_data_from_files.confirm_meter_type(file_path,data,db,filename)
-        #process_file(file_path)
-        if my_message == "Data stored successfully":
-            return render_template('success.html', message = my_message)
+        elif len(request.files.getlist("fileInput")) == 1 and data['meterTypeFile'] == "Elster A1700":             
+            my_message = store_data_from_files.process_Elster_data(db,file_path,filename,data)
+            if my_message == "Data stored successfully":
+                return render_template('success.html', message = my_message)
+
+    # FOR PROMETER AND PROMETER 100 save file to server
+    elif files_sent and allowed_file(files_sent.filename) and len(request.files.getlist("fileInput")) == 2:   
+        file_list = request.files.getlist("fileInput")
+        for file in file_list:
+            filename = file.filename.strip()
+            manufacturer_folder = os.path.join(UPLOAD_FOLDER, data['meterTypeFile'])
+            os.makedirs(manufacturer_folder, exist_ok=True) 
+            file_path = os.path.join(manufacturer_folder, filename)
+            # Save the file
+            file.save(file_path)
+            files_paths.append(file_path)
+        print(files_paths)
+
+        if data['meterTypeFile'] == "CEWE Prometer 100": 
+            my_message = store_data_from_files.process_pro100_data(db,files_paths,filename,data)
+            if my_message == "Data stored successfully":
+                return render_template('success.html', message = my_message)
+            
+        elif data['meterTypeFile'] == "CEWE Prometer": 
+            my_message = store_data_from_files.process_prometer_data(db,files_paths,filename,data)
+            if my_message == "Data stored successfully":
+                return render_template('success.html', message = my_message)
+
+   
+        
+    # elif len(request.files.getlist("fileInput")) == 2 and data['meterTypeFile'] == "CEWE Prometer 100":             
+    #     my_message = store_data_from_files.process_pro100_data(db,file_path,filename,data)
+    #     if my_message == "Data stored successfully":
+    #         return render_template('success.html', message = my_message)
 
 
 # User Registration
+# @app.route('/register', methods=['POST'])
+# def register():
+#     name = request.form['name']
+#     email = request.form['email']
+#     password = bcrypt.generate_password_hash(request.form['password']).decode('utf-8')
+
+#     existing_user = User.query.filter_by(email=email).first()
+#     if existing_user:
+#         return render_template('errors.html', message="Email already used. Please login or use another email")
+
+#     new_user = User(name=name, email=email, password=password)
+#     db.session.add(new_user)
+#     db.session.commit()
+
+#     my_message="Registration is successful"
+#     return render_template('success.html', message = my_message)
+
 @app.route('/register', methods=['POST'])
-def register():
+def signup():
     name = request.form['name']
     email = request.form['email']
     password = bcrypt.generate_password_hash(request.form['password']).decode('utf-8')
 
-    existing_user = User.query.filter_by(email=email).first()
-    if existing_user:
-        return render_template('errors.html', message="Email already used. Please login or use another email")
+    if User.query.filter_by(email=email).first():
+        return render_template('errors.html', message="Email already registered.")
 
-    new_user = User(name=name, email=email, password=password)
-    db.session.add(new_user)
+    otp = generate_otp()
+    user = User(email=email, password=password, otp=otp, is_verified=False, name=name)
+    db.session.add(user)
     db.session.commit()
 
-    my_message="Registration is successful"
-    return render_template('success.html', message = my_message)
+    # Send OTP via email
+    msg = Message("Your OTP Verification Code", sender="jkimera5@gmail.com", recipients=[email])
+    msg.body = f"Your OTP is {otp}"
+    mail.send(msg)
+
+    return render_template('verify_otp.html', email=email)
+
+@app.route('/verify_otp', methods=['POST'])
+def verify_otp():
+    email = request.form['email']
+    input_otp = request.form['otp']
+
+    user = User.query.filter_by(email=email).first()
+    if user and user.otp == input_otp:
+        user.is_verified = True
+        user.otp = None
+        db.session.commit()
+        return render_template('index.html', message="Email verified. You may now log in.")
+    else:
+        return render_template('verify_otp.html', email=email, message="Invalid OTP. Try again.")
+
 
 # User Login
-@app.route('/login', methods=['POST'])
+# @app.route('/login', methods=['POST'])
+# def login():
+#     #print("function called")
+#     email = request.form['email']
+#     password = request.form['password']  
+#     user = User.query.filter_by(email=email).first()
+
+#     if user and bcrypt.check_password_hash(user.password, password):
+#         login_user(user)
+#         #print(user.name, user.email)
+#         return render_template('home.html', current_user = user )
+#     else:
+#         #print("user not found")
+#         return render_template('errors.html', message="user not found. check email or register first")
+
+@app.route('/login', methods=['POST']) 
 def login():
-    #print("function called")
     email = request.form['email']
     password = request.form['password']  
     user = User.query.filter_by(email=email).first()
 
+    if not user:
+        return render_template('errors.html', message="User not found. Check email or register first")
+
+    if not user.is_verified:
+        return render_template('errors.html', message="Please verify your email before logging in.")
+
     if user and bcrypt.check_password_hash(user.password, password):
         login_user(user)
-        #print(user.name, user.email)
-        return render_template('home.html', current_user = user )
+        return render_template('home.html', current_user=user)
     else:
-        print("user not found")
-        return render_template('errors.html', message="user not found. check email or register first")
+        return render_template('errors.html', message="Incorrect password.")
+
 
 
 # Dashboard (Protected Route)

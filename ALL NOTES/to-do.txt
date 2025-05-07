@@ -36,3 +36,8 @@ MARCH 09 2025
 
 - IF ENERGY METER WITH SAME SERIAL NO EXIST, REPLACE
 - IF THE category, sub_ipp_name and node_name are same, replace everything
+
+MARCH 12, 2025
+- check the file extensions with JS
+- check the names formart for files for CEWE Prometer 
+- divide elster values by 1000 before storing them
